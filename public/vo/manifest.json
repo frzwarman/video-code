@@ -3,7 +3,7 @@
     "file": "vo/S1.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
-    "tail": 0.35,
+    "tail": 1,
     "seconds": 2.621,
     "segments": [
       {

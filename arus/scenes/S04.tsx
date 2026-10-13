@@ -6,7 +6,10 @@ import {Bank, Cash, Wallet} from '../icons';
 import {Logo} from '../Logo';
 import {C, body, display, glass} from '../palette';
 
-const LIFT_AT = cue('S4', 1) - 10; // logo moves up to make room
+const LIFT_AT = cue('S4', 1) - 10;
+const HEAD_AT = cue('S4', 1) + 14; // "Semua rekeningmu di SATU tempat", once the logo is out of the way
+const HEADLINE = ['Semua', 'rekeningmu', 'di', 'satu', 'tempat'];
+const KEY_WORD = 3; // logo moves up to make room
 // VO: "…tunai, bank, dan e-wallet." Totals Rp 947.000, reused in S8.
 const CARDS: {name: string; kind: string; amount: number; Icon: ComponentType<{size: number; color: string}>; at: number}[] = [
   {name: 'Tunai', kind: 'Tunai', amount: 450_000, Icon: Cash, at: cue('S4', 2)},
@@ -19,7 +22,7 @@ const TOTAL_AT = voiceEnd('S4') + 4;
 // Lean into the cards as they land, back out for the total.
 export const camera: CameraKey[] = [{at: cue('S4', 2) - 10, zoom: 1.2, x: 540, y: 900, dur: 40}, {at: TOTAL_AT - 10, zoom: 1, dur: 30}];
 
-export const sfx: Cue[] = CARDS.map((c) => ({at: c.at + 12, sound: 'click', volume: 0.5}));
+export const sfx: Cue[] = [{at: HEAD_AT, sound: 'tick', volume: 0.4}, ...CARDS.map((c) => ({at: c.at + 12, sound: 'click', volume: 0.5}))];
 
 export const Scene = () => {
   const f = useCurrentFrame();
@@ -49,6 +52,21 @@ export const Scene = () => {
             </span>
           ))}
         </div>
+      </div>
+      {/* The claim itself, word by word, between the logo and the cards it describes. */}
+      <div style={{position: 'absolute', top: 436, left: 40, right: 40, textAlign: 'center', fontFamily: display, fontWeight: 700, fontSize: 52, lineHeight: 1.15, whiteSpace: 'nowrap'}}>
+        {HEADLINE.map((w, i) => {
+          const p = prog(f, HEAD_AT + i * 4, 18);
+          const key = i === KEY_WORD;
+          return (
+            <span key={w}>
+              <span style={{display: 'inline-block', marginRight: '0.3em', color: key ? C.highlight : C.ink, opacity: p, transform: `translateY(${(1 - p) * 24}px) scale(${key ? 0.9 + 0.1 * prog(f, HEAD_AT + i * 4, 18, back) : 1})`}}>
+                {w}
+              </span>
+              {i === 1 && <br />}
+            </span>
+          );
+        })}
       </div>
       {CARDS.map(({name, kind, amount, Icon, at}, i) => {
         const p = prog(f, at, 24, back);

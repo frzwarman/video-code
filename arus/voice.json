@@ -15,7 +15,8 @@
       "id": "S1",
       "segments": [
         "Bulan lalu, uangmu habis ke MANA?"
-      ]
+      ],
+      "tail": 1.0
     },
     {
       "id": "S2",

@@ -20,7 +20,7 @@ Everything moves for a reason: it shows money moving, text being read, or data t
 - S1: each tick sends a red "−Rp …" chip from the balance to the sticker it paid for; the words blur in.
 - S2: the bank card tilts back in 3D on "Arus"; beads flow down each branch; amounts count up.
 - S3: the phone wobbles on each tap; a scan beam reads the receipt; the category list slides up and the picked row lights; the check in "Langsung tercatat." draws on.
-- S4: the wordmark letters stagger in; cards tilt up from the bottom with icons rotating in and amounts counting; a total line (Rp 947.000) draws at the end.
+- S4: the wordmark letters stagger in; the headline builds word by word; cards tilt up from the bottom with icons rotating in and amounts counting; a total line (Rp 947.000) draws at the end.
 - S5: three payment screens slide in; a scan beam reads them all; the three fields fly on arcs from the receipt into the transaction row, shrinking and recolouring as they land; a ring pulses when the category snaps on, and again when the "Diingat" tag lands.
 - S6: bars have a bright head while the month runs; the day counter ticks; Hiburan flinches and gets an amber "%" badge when it crosses 85%.
 - S7: the real dashboard in a phone; stats count, bars and donut draw; camera: Income → Expenses → scroll → transfer row.
@@ -36,91 +36,91 @@ Everything moves for a reason: it shows money moving, text being read, or data t
 
 ---
 
-### S1 · 0.00–3.17s — Hook A
+### S1 · 0.00–3.82s — Hook A
 - **Shot:** close-up
 - **On-screen:** "Bulan lalu, uangmu habis ke mana?" · below it a balance counting down `Rp 4.250.000 → Rp 312.000`
 - **Position:** question centre, upper half; counter centre, below
-- **Sound:** VO "Bulan lalu, uangmu habis ke mana?" · soft tick per digit change, stops dead at 312.000
+- **Sound:** VO "Bulan lalu, uangmu habis ke mana?" · soft tick per digit change, stops dead at 312.000 · then a 1 s hold on the red figure before the cut
 
-### S2 · 3.17–9.02s — Hook B
+### S2 · 3.82–9.67s — Hook B
 - **Shot:** wide, split top/bottom
 - **On-screen:** top: flat grey bank-style card "Saldo Rp 312.000", label **sisa**. Bottom: same Rp 312.000 card in Arus glass, wave lines branch out to Makan · Transport · Belanja · Tagihan, label **perginya**
 - **Position:** top half / bottom half, labels left-aligned on each card
 - **Sound:** VO "Aplikasi bank cuma kasih tahu sisa saldomu. Arus kasih tahu ke mana perginya." · low hit on "Arus"
 
-### S3 · 9.02–17.37s — Hook C
+### S3 · 9.67–18.02s — Hook C
 - **Shot:** close-up on phone
 - **On-screen:** receipt "Transfer Berhasil · Rp 152.500 · Ke: KEDAI KOPI". Two rings pulse from the phone's back edge, tag "2×"; a scan beam reads the receipt. KEDAI KOPI is a new payee, so the Shortcut's **Pilih kategori** list slides up (Makan · Transport · Belanja · Tagihan · Hiburan · Lainnya); **Makan** is tapped; the list drops. Notification drops in: `Spent Rp 152.500 · KEDAI KOPI · Makan · BCA`. Then a check + "Langsung tercatat."
 - **Position:** phone centre, 80% height; notification top of phone screen; caption lower third
 - **Sound:** VO "Habis bayar? Ketuk DUA kali bagian belakang iPhone-mu. Pilih kategorinya, dan LANGSUNG tercatat." · two taps synced to rings · whoosh for the list · tap on Makan · iOS-style ding on notification
 
-### S4 · 17.37–24.96s — Accounts
+### S4 · 18.02–25.61s — Accounts
 - **Shot:** wide
-- **On-screen:** small logo + "Arus" top; three glass cards stack in: Tunai · BCA · E-wallet, each with balance
+- **On-screen:** logo + "Arus" centre, lifting to the top; the headline "Semua rekeningmu di satu tempat" appears word by word beneath it ("satu" in mint); three glass cards stack in: Tunai · BCA · E-wallet, each with balance
 - **Position:** logo top-centre; cards centre column
 - **Sound:** VO "Ini Arus. Semua rekeningmu di satu tempat: tunai, bank, dan e-wallet." · one soft click per card landing
 
-### S5 · 24.96–40.33s — Receipt → transaction
+### S5 · 25.61–40.98s — Receipt → transaction
 - **Shot:** wide: three payment screens stacked (bank transfer · QRIS · e-wallet), then the row
 - **On-screen:** three light screens slide in one by one: "TRANSFER BANK · Transfer Berhasil · Rp 152.500 · Ke KEDAI KOPI", "QRIS · Pembayaran Berhasil · Rp 48.000 · Merchant WARUNG SATE" (with a QR), "E-WALLET · Rp 120.000 · Penerima TOKO BUKU". A scan beam sweeps all three; amount, payee and date light up on every screen in turn, tags **Nominal · Penerima · Tanggal** beside the first; the first screen's fields fly into a transaction row; the category chip **Makan** (the one you picked) snaps on, then a green **Diingat** tag pops: next time this payee files itself
 - **Position:** receipt upper half; transaction row lower half
 - **Sound:** VO "Transfer bank, QRIS, atau e-wallet: apa pun layarnya, Arus membaca nominal, penerima, dan tanggalnya. Lalu memasukkannya ke kategori yang kamu PILIH. Lain kali, Arus ingat SENDIRI." · click per screen, whoosh for the scan, light tick per highlight, snap on chip, click on the tag
 
-### S6 · 40.33–44.83s — Budgets
+### S6 · 40.98–45.48s — Budgets
 - **Shot:** wide
 - **On-screen:** "Anggaran Oktober" · 3 bars (Makan, Transport, Hiburan) fill as a day counter runs 1 → 31 Okt; Hiburan turns warn-amber near the end
 - **Position:** title top third; bars centre; day counter under bars
 - **Sound:** VO "Atur anggaran per kategori, dan pantau sisanya sepanjang bulan." · soft rising tick as each bar fills
 
-### S7 · 44.83–52.16s — Dashboard flow
+### S7 · 45.48–52.81s — Dashboard flow
 - **Shot:** close-up on phone (600×1300), the real Arus dashboard at phone width (DashboardPage.tsx, Oktober 2026, hardcoded): Keluarga · Total balance Rp 947.000 · Income Rp 5.200.000 · Expenses Rp 3.938.000 · Net Rp 1.262.000 · "Income and expenses" 6-month bars · Accounts · Recent transactions (a BCA → E-wallet transfer first) · "Where it went" donut · Budgets.
 - **On-screen:** stats count up, bars grow, donut draws; the camera zooms to **Income** on "pemasukan", pans to **Expenses** on "pengeluaran", pulls out while the page scrolls to Recent transactions and zooms onto the **transfer** row, which lights up blue.
 - **Position:** phone centre
 - **Sound:** VO "Dasbor menunjukkan ALUR uangmu: pemasukan, pengeluaran, dan transfer antar-rekening." · click per stat, whoosh on the scroll, snap on the transfer
 
-### S8 · 52.16–57.07s — Household
+### S8 · 52.81–57.72s — Household
 - **Shot:** wide
 - **On-screen:** three phones side by side, all counting up to the same total Rp 947.000; avatars above with roles **Pemilik · Editor · Pembaca**; one line links the three numbers, then "Angka yang sama."
 - **Position:** phones centre row; roles above
 - **Sound:** VO "Bisa dipakai bareng keluarga. Semua melihat angka yang sama."
 
-### S9 · 57.07–58.92s — Safety title
+### S9 · 57.72–59.57s — Safety title
 - **Shot:** close-up
 - **On-screen:** padlock clicks shut above "Soal keamanan:"
 - **Position:** centre
 - **Sound:** VO "Soal keamanan:" · single low tone
 
-### S10 · 58.92–65.72s — No bank connection
+### S10 · 59.57–66.37s — No bank connection
 - **Shot:** wide
 - **On-screen:** bank icon ↔ Arus icon, the line between them is cut. Three chips strike through in turn: ~~Login bank~~ ~~PIN~~ ~~Password~~
 - **Position:** icons upper half; chips stacked lower half
 - **Sound:** VO "Arus tidak pernah terhubung ke bankmu. Tidak ada login bank, tidak ada PIN, tidak ada password." · one muted thud per strike
 
-### S11 · 65.72–72.56s — Screenshot stays on the phone
+### S11 · 66.37–73.21s — Screenshot stays on the phone
 - **Shot:** close-up on phone
 - **On-screen:** the screenshot inside the phone: recognised lines are outlined, then only those text lines leave the phone to an "Arus" pill. Then the image itself dissolves (blur, shrink, gone) and in its place: a crossed-out image icon, "Tidak disimpan · Tidak dikirim". Caption "Hanya teksnya yang dikirim. Gambarnya tidak disimpan."
 - **Position:** phone centre; text lines exit top; caption lower third
 - **Sound:** VO "Screenshot struk dibaca di iPhone-mu SENDIRI. Gambarnya TIDAK PERNAH disimpan, apalagi dikirim." · ticks per line, whoosh as the text leaves, whoosh as the image dissolves
 
-### S12 · 72.56–76.91s — Encrypted
+### S12 · 73.21–77.56s — Encrypted
 - **Shot:** wide
 - **On-screen:** phone → padlock → database; padlock closes on each leg. "Terenkripsi saat dikirim & disimpan"
 - **Position:** chain across centre; caption below
 - **Sound:** VO "Data terenkripsi saat dikirim dan saat disimpan." · lock click ×2
 
-### S13 · 76.91–82.74s — No trackers, invite only
+### S13 · 77.56–83.39s — No trackers, invite only
 - **Shot:** wide
 - **On-screen:** two lines appear in turn: "Tanpa pelacak pihak ketiga" · "Hanya yang kamu undang yang bisa melihat"
 - **Position:** centre, stacked
 - **Sound:** VO "Tanpa pelacak pihak ketiga. Dan hanya orang yang kamu undang yang bisa melihat datamu."
 
-### S14 · 82.74–104.57s — Add to Home Screen
+### S14 · 83.39–105.22s — Add to Home Screen
 - **Shot:** close-up on phone
 - **On-screen:** an "App Store" chip is struck through (nothing to download). The phone shows Arus in Safari: dashboard, address pill `arus-finance.farizz-a.workers.dev`, toolbar. A tap ring on the Share button; the share sheet slides up (site header, six rows); the row **Tambah ke Layar Utama** lights up and is tapped; the sheet drops; the screen becomes a home screen of neutral tiles and the Arus icon pops into the empty slot with its label. Caption "Seperti aplikasi biasa." Then the Android way ("Di Android: ketuk menu Chrome, lalu pilih Tambahkan ke Layar utama."): the chip above the phone becomes "Android · Chrome", the screen becomes a Chrome-style page (address bar on top, ⋮ menu), the menu drops down, **Tambahkan ke Layar utama** lights up and is tapped, and the home screen with the icon returns.
 - **Position:** chip top-centre; phone centre (460×990); caption lower third
 - **Sound:** VO "Arus itu aplikasi web, jadi tidak perlu diunduh dari App Store. Buka Arus di Safari, ketuk tombol Bagikan, lalu pilih Tambah ke Layar Utama. Sekarang Arus ada di layar utamamu, seperti aplikasi biasa. Di Android, buka Arus di Chrome, ketuk menu, lalu pilih Tambahkan ke Layar utama." · thud on the strike, tap ×2, whoosh for the sheet, snap on the icon
 
-### S15 · 104.57–109.73s — Closing logo + CTA
+### S15 · 105.22–110.38s — Closing logo + CTA
 - **Shot:** close-up
 - **On-screen:** logo tile scales in, its wave line draws on; "Arus" wordmark; "Lihat ke mana uangmu mengalir." · link `arus-finance.farizz-a.workers.dev`
 - **Position:** logo centre, upper half; wordmark + tagline below; link lower third (above safe zone)
