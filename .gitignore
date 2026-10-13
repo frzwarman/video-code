@@ -3,3 +3,4 @@ out/
 .cache/
 .env
 public/consent.m4a
+public/vo.m4a
