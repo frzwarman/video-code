@@ -1,0 +1,197 @@
+{
+  "engine": {
+    "model": "gemini-3.8-flash-tts",
+    "voice": "Kore",
+    "style": "Warm, confident, clear narrator for an app advert in Indonesian. Energetic but never over the top; crisp pronunciation; medium pace.",
+    "rpm": 3
+  },
+  "defaults": {
+    "lead": 0.2,
+    "tail": 0.35,
+    "pause": 0.3
+  },
+  "scenes": [
+    {
+      "id": "S1",
+      "segments": [
+        "Bulan lalu, uangmu habis ke MANA?"
+      ]
+    },
+    {
+      "id": "S2",
+      "segments": [
+        "Aplikasi bank cuma kasih tahu SISA saldomu.",
+        "Arus kasih tahu ke mana PERGINYA."
+      ]
+    },
+    {
+      "id": "S3",
+      "segments": [
+        {
+          "text": "Habis bayar? Ketuk DUA kali bagian belakang iPhone-mu.",
+          "pause": 0.9
+        },
+        {
+          "text": "Pilih kategorinya,",
+          "pause": 0.5
+        },
+        "dan LANGSUNG tercatat."
+      ]
+    },
+    {
+      "id": "S4",
+      "segments": [
+        "Ini Arus.",
+        {
+          "text": "Semua rekeningmu di SATU tempat:",
+          "pause": 0.25
+        },
+        {
+          "text": "tunai,",
+          "pause": 0.2
+        },
+        {
+          "text": "bank,",
+          "pause": 0.2
+        },
+        "dan e-wallet."
+      ],
+      "tail": 0.8
+    },
+    {
+      "id": "S5",
+      "segments": [
+        {
+          "text": "Transfer bank, QRIS, atau e-wallet:",
+          "pause": 0.35
+        },
+        {
+          "text": "apa pun layarnya, Arus membaca",
+          "pause": 0.25
+        },
+        {
+          "text": "nominal,",
+          "pause": 0.2
+        },
+        {
+          "text": "penerima,",
+          "pause": 0.2
+        },
+        "dan tanggalnya.",
+        "Lalu memasukkannya ke kategori yang kamu PILIH.",
+        "Lain kali, Arus ingat SENDIRI."
+      ],
+      "tail": 0.6
+    },
+    {
+      "id": "S6",
+      "segments": [
+        "Atur anggaran per kategori, dan pantau sisanya sepanjang BULAN."
+      ]
+    },
+    {
+      "id": "S7",
+      "segments": [
+        {
+          "text": "Dasbor menunjukkan ALUR uangmu:",
+          "pause": 0.25
+        },
+        {
+          "text": "pemasukan,",
+          "pause": 0.2
+        },
+        {
+          "text": "pengeluaran,",
+          "pause": 0.2
+        },
+        "dan transfer antar-rekening."
+      ]
+    },
+    {
+      "id": "S8",
+      "segments": [
+        "Bisa dipakai bareng keluarga.",
+        "Semua melihat angka yang SAMA."
+      ],
+      "tail": 0.6
+    },
+    {
+      "id": "S9",
+      "segments": [
+        "Soal keamanan."
+      ]
+    },
+    {
+      "id": "S10",
+      "segments": [
+        "Arus TIDAK PERNAH terhubung ke bankmu.",
+        {
+          "text": "Tidak ada login bank,",
+          "pause": 0.2
+        },
+        {
+          "text": "tidak ada PIN,",
+          "pause": 0.2
+        },
+        "tidak ada password."
+      ]
+    },
+    {
+      "id": "S11",
+      "segments": [
+        "Screenshot struk dibaca di iPhone-mu SENDIRI.",
+        "Gambarnya TIDAK PERNAH disimpan, apalagi dikirim."
+      ]
+    },
+    {
+      "id": "S12",
+      "segments": [
+        {
+          "text": "Data terenkripsi saat DIKIRIM,",
+          "pause": 0.25
+        },
+        "dan saat DISIMPAN."
+      ]
+    },
+    {
+      "id": "S13",
+      "segments": [
+        "TANPA pelacak pihak ketiga.",
+        "Dan HANYA orang yang kamu undang yang bisa melihat datamu."
+      ]
+    },
+    {
+      "id": "S14",
+      "segments": [
+        "Arus itu aplikasi web, jadi TIDAK perlu diunduh dari App Store.",
+        {
+          "text": "Buka Arus di Safari,",
+          "pause": 0.2
+        },
+        {
+          "text": "ketuk tombol Bagikan,",
+          "pause": 0.35
+        },
+        {
+          "text": "lalu pilih “Tambah ke Layar Utama”.",
+          "pause": 0.5
+        },
+        "Sekarang Arus ada di layar utamamu, seperti aplikasi BIASA.",
+        "Di Android: ketuk menu Chrome, lalu pilih “Tambahkan ke Layar utama”."
+      ],
+      "tail": 0.8
+    },
+    {
+      "id": "S15",
+      "segments": [
+        {
+          "text": "Arus.",
+          "pause": 0.4
+        },
+        "Lihat ke mana uangmu MENGALIR."
+      ],
+      "lead": 0.6,
+      "tail": 1.5
+    }
+  ]
+}
