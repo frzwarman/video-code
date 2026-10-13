@@ -1,9 +1,9 @@
 // S10 · 43.45–49.18s — Arus never connects to your bank. No bank login, no PIN, no password.
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, cue, fadeUp, kick, lerp, prog} from '../core';
+import {type CameraKey, type Cue, cue, fadeUp, kick, lerp, prog, spin} from '../core';
 import {Bank} from '../icons';
 import {Logo} from '../Logo';
-import {C, body, glass} from '../palette';
+import {C, body, panel} from '../palette';
 
 const CUT_AT = cue('S10', 0, 0.5);
 // VO: "Tidak ada login bank, tidak ada PIN, tidak ada password."
@@ -17,7 +17,7 @@ const L = 360; // inner end of the bank side
 const R = 720; // inner end of the Arus side
 
 // In on the cut, out for the three chips.
-export const camera: CameraKey[] = [{at: CUT_AT - 10, zoom: 1.25, x: 540, y: 560, dur: 28}, {at: CHIPS[0].strike - 30, zoom: 1, dur: 30}];
+export const camera: CameraKey[] = [{at: 0, zoom: 1.35, x: 540, y: 560, dur: 1}, {at: CUT_AT - 10, zoom: 1.25, x: 540, y: 560, dur: 28}, {at: CHIPS[0].strike - 30, zoom: 1, dur: 30}];
 
 export const sfx: Cue[] = [{at: CUT_AT, sound: 'snap', volume: 0.6}, ...CHIPS.map((c) => ({at: c.strike, sound: 'thud', volume: 0.8}))];
 
@@ -33,7 +33,7 @@ export const Scene = () => {
       <div style={{position: 'absolute', left: 120, top: Y - 120, width: 240, height: 240, borderRadius: 64, background: C.raised, display: 'grid', placeItems: 'center', ...fadeUp(prog(f, 0, 20)), opacity: prog(f, 0, 20) * (1 - 0.55 * cut)}}>
         <Bank size={140} color={C.inkSoft} />
       </div>
-      <div style={{position: 'absolute', left: 720, top: Y - 120, ...fadeUp(prog(f, 4, 20))}}>
+      <div style={{position: 'absolute', left: 720, top: Y - 120, opacity: prog(f, 4, 20), transform: `translateY(${(1 - prog(f, 4, 20)) * 30}px) rotate(${spin(f, 4, 26)}deg)`}}>
         <Logo size={240} />
       </div>
       <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
@@ -56,7 +56,7 @@ export const Scene = () => {
           <div
             key={c.label}
             style={{
-              ...glass,
+              ...panel,
               ...fadeUp(prog(f, 30 + i * 10, 22), 30),
               position: 'absolute',
               top: 880 + i * 190,

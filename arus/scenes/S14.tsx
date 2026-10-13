@@ -1,11 +1,12 @@
 // S14 — Add to Home Screen. iPhone: Safari → Share → "Tambah ke Layar Utama" → the Arus icon lands on the
 // home screen. Then Android: Chrome → ⋮ → "Tambahkan ke Layar utama" → same home screen.
 import {AbsoluteFill, random, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, back, cue, fadeUp, kick, prog, rupiah, voiceEnd} from '../core';
-import {Ring} from '../Fx';
+import {type CameraKey, type Cue, back, cue, fadeUp, kick, prog, spin, voiceEnd} from '../core';
+import {Marker, Ring} from '../Fx';
 import {Logo} from '../Logo';
-import {Phone} from '../Phone';
-import {C, body, display, glass} from '../palette';
+import {Phone, bezel} from '../Phone';
+import {APP_W, Home} from '../Home';
+import {C, body, display} from '../palette';
 
 // Voice segments: 0 "…tidak perlu diunduh dari App Store." · 1 "Buka Arus di Safari," · 2 "ketuk tombol Bagikan,"
 // 3 "lalu pilih Tambah ke Layar Utama." · 4 "Sekarang Arus ada di layar utamamu, seperti aplikasi biasa."
@@ -42,7 +43,8 @@ export const sfx: Cue[] = [
 ];
 
 const PHONE = {left: 310, top: 380, w: 460, h: 990};
-const SCREEN = {w: PHONE.w - 28, h: PHONE.h - 28}; // inside the bezel
+const BZ = bezel(PHONE.w, PHONE.h);
+const SCREEN = {w: BZ.screenW, h: BZ.screenH}; // inside the bezel
 const SHEET_H = 520;
 const SHARE_ICON = {x: 216, y: 914}; // screen coordinates
 const ROWS = ['Salin', 'Tambah ke Daftar Bacaan', 'Tambah Penanda', 'Tambah ke Favorit', 'Tambah ke Layar Utama', 'Tandai'];
@@ -52,7 +54,7 @@ const PICK2 = 3;
 const MENU_W = 300;
 const DOTS = {x: SCREEN.w - 30, y: 44};
 const SLOT = {r: 1, c: 3}; // the empty home-screen slot Arus lands in
-const toScene = (p: {x: number; y: number}) => ({x: PHONE.left + 14 + p.x, y: PHONE.top + 14 + p.y});
+const toScene = (p: {x: number; y: number}) => ({x: PHONE.left + BZ.inset + p.x, y: PHONE.top + BZ.inset + p.y});
 const SHARE = toScene(SHARE_ICON);
 const ROW = toScene({x: SCREEN.w / 2, y: SCREEN.h - SHEET_H + 110 + PICK * 62 + 28});
 const SLOT_XY = toScene({x: 24 + SLOT.c * 104 + 38, y: 90 + SLOT.r * 120 + 38});
@@ -76,33 +78,10 @@ const MENU_ICONS = [
   'M12 8a4 4 0 100 8 4 4 0 000-8zM12 2v2M12 20v2M2 12h2M20 12h2', // settings
 ];
 
-// The Arus dashboard, as a browser shows it.
-const Dashboard = ({top}: {top: number}) => (
-  <div style={{position: 'absolute', left: 0, right: 0, top, fontFamily: body}}>
-    <div style={{position: 'absolute', top: 0, left: 28, display: 'flex', alignItems: 'center', gap: 12}}>
-      <Logo size={36} />
-      <span style={{fontFamily: display, fontWeight: 700, fontSize: 26, color: C.ink}}>Arus</span>
-    </div>
-    <div style={{...glass, borderRadius: 24, position: 'absolute', top: 56, left: 24, right: 24, height: 118, padding: '20px 24px', boxSizing: 'border-box'}}>
-      <div style={{fontSize: 15, fontWeight: 600, letterSpacing: 2, color: C.inkFaint}}>SALDO TOTAL</div>
-      <div style={{fontSize: 34, fontWeight: 800, color: C.ink, marginTop: 8}}>{rupiah(947_000)}</div>
-    </div>
-    {[
-      ['Tunai', 450_000],
-      ['BCA', 312_000],
-      ['E-wallet', 185_000],
-    ].map(([n, a], i) => (
-      <div key={n} style={{...glass, borderRadius: 20, position: 'absolute', top: 194 + i * 76, left: 24, right: 24, height: 62, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 22px', boxSizing: 'border-box', fontSize: 19, fontWeight: 700, color: C.ink}}>
-        <span>{n}</span>
-        <span style={{fontVariantNumeric: 'tabular-nums'}}>{rupiah(a as number)}</span>
-      </div>
-    ))}
-    <div style={{...glass, borderRadius: 24, position: 'absolute', top: 434, left: 24, right: 24, height: 104, padding: '18px 24px', boxSizing: 'border-box'}}>
-      <div style={{fontSize: 15, fontWeight: 600, letterSpacing: 2, color: C.inkFaint}}>ANGGARAN OKTOBER</div>
-      <div style={{height: 14, borderRadius: 7, background: C.sunken, marginTop: 18, overflow: 'hidden'}}>
-        <div style={{width: '71%', height: '100%', background: C.accent}} />
-      </div>
-    </div>
+// The app, as a browser shows it: the real Home, scaled to the phone's screen.
+const Dashboard = ({f, top}: {f: number; top: number}) => (
+  <div style={{position: 'absolute', left: 0, top, width: APP_W, transformOrigin: 'top left', transform: `scale(${SCREEN.w / APP_W})`}}>
+    <Home f={f} />
   </div>
 );
 
@@ -111,13 +90,13 @@ const SafariView = ({f}: {f: number}) => {
   const glow = prog(f, URL_AT, 10) * (1 - prog(f, URL_AT + 50, 14));
   return (
     <div style={{position: 'absolute', inset: 0, background: C.surface, fontFamily: body}}>
-      <Dashboard top={76} />
-      <div style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 150, background: 'oklch(0.2 0.02 180)', borderTop: `1px solid ${C.glassLine}`}}>
-        <div style={{position: 'absolute', top: 16, left: 20, right: 20, height: 44, borderRadius: 14, background: C.raised, display: 'grid', placeItems: 'center', fontSize: 17, fontWeight: 600, color: C.inkSoft}}>
+      <Dashboard f={f} top={60} />
+      <div style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 150, background: 'oklch(0.975 0.004 165 / 0.96)', borderTop: `1px solid ${C.line}`}}>
+        <div style={{position: 'absolute', top: 16, left: 20, right: 20, height: 44, borderRadius: 14, background: C.sunken, display: 'grid', placeItems: 'center', fontSize: 17, fontWeight: 600, color: C.ink}}>
           arus-finance.farizz-a.workers.dev
         </div>
-        <div style={{position: 'absolute', top: 13, left: 17, right: 17, height: 50, borderRadius: 17, border: `3px solid ${C.highlight}`, opacity: glow}} />
-        <svg width={SCREEN.w} height={60} viewBox={`0 0 ${SCREEN.w} 60`} style={{position: 'absolute', bottom: 18, left: 0}} fill="none" stroke={C.highlight} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
+        <div style={{position: 'absolute', top: 13, left: 17, right: 17, height: 50, borderRadius: 17, border: `3px solid ${C.accent}`, opacity: glow}} />
+        <svg width={SCREEN.w} height={60} viewBox={`0 0 ${SCREEN.w} 60`} style={{position: 'absolute', bottom: 18, left: 0}} fill="none" stroke={C.accentStrong} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
           <path d="M46 18l-12 12 12 12" opacity={0.6} />
           <path d="M114 18l12 12-12 12" opacity={0.35} />
           <path d={`M${SHARE_ICON.x - 12} 24v19h24V24M${SHARE_ICON.x} 36V10M${SHARE_ICON.x - 7} 17l7-7 7 7`} />
@@ -135,7 +114,7 @@ const Sheet = ({f}: {f: number}) => {
   const down = prog(f, SHEET_DOWN, 14);
   if (f < SHEET_UP) return null;
   return (
-    <div style={{position: 'absolute', left: 0, right: 0, top: SCREEN.h - SHEET_H * up + SHEET_H * down, height: SHEET_H + 40, borderRadius: '28px 28px 0 0', background: 'oklch(0.26 0.02 180)', boxShadow: '0 -20px 60px oklch(0 0 0 / 0.5)', fontFamily: body}}>
+    <div style={{position: 'absolute', left: 0, right: 0, top: SCREEN.h - SHEET_H * up + SHEET_H * down, height: SHEET_H + 40, borderRadius: '28px 28px 0 0', background: C.raised, boxShadow: '0 -20px 60px oklch(0 0 0 / 0.25)', fontFamily: body}}>
       <div style={{position: 'absolute', top: 10, left: '50%', width: 40, height: 5, marginLeft: -20, borderRadius: 3, background: C.lineStrong}} />
       <div style={{position: 'absolute', top: 30, left: 22, display: 'flex', alignItems: 'center', gap: 14}}>
         <Logo size={46} />
@@ -148,9 +127,9 @@ const Sheet = ({f}: {f: number}) => {
       {ROWS.map((label, i) => {
         const picked = i === PICK;
         const lit = picked ? prog(f, ROW_AT, 10) : 0;
-        const color = lit > 0 ? C.accentStrong : picked ? C.ink : C.inkSoft;
+        const color = lit > 0 ? C.accentInk : picked ? C.ink : C.inkSoft;
         return (
-          <div key={label} style={{position: 'absolute', top: 110 + i * 62, left: 14, right: 14, height: 56, borderRadius: 14, display: 'flex', alignItems: 'center', gap: 16, padding: '0 16px', boxSizing: 'border-box', background: `oklch(0.3 0.06 172 / ${lit})`, fontSize: 19, fontWeight: picked ? 800 : 600, color, transform: `translateX(${picked ? kick(f, TAP_ROW, 4, 5) : 0}px)`}}>
+          <div key={label} style={{position: 'absolute', top: 110 + i * 62, left: 14, right: 14, height: 56, borderRadius: 14, display: 'flex', alignItems: 'center', gap: 16, padding: '0 16px', boxSizing: 'border-box', background: `oklch(0.95 0.045 160 / ${lit})`, fontSize: 19, fontWeight: picked ? 800 : 600, color, transform: `translateX(${picked ? kick(f, TAP_ROW, 4, 5) : 0}px)`}}>
             <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{flex: 'none'}}>
               <path d={ICONS[i]} />
             </svg>
@@ -168,8 +147,8 @@ const ChromeView = ({f}: {f: number}) => {
   const close = prog(f, TAP_ROW2 + 10, 10);
   return (
     <div style={{position: 'absolute', inset: 0, background: C.surface, fontFamily: body}}>
-      <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: 92, background: 'oklch(0.2 0.02 180)', borderBottom: `1px solid ${C.glassLine}`}}>
-        <div style={{position: 'absolute', top: 36, left: 18, right: 64, height: 42, borderRadius: 21, background: C.raised, display: 'flex', alignItems: 'center', paddingLeft: 18, fontSize: 16, fontWeight: 600, color: C.inkSoft}}>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: 92, background: C.raised, borderBottom: `1px solid ${C.line}`}}>
+        <div style={{position: 'absolute', top: 36, left: 18, right: 64, height: 42, borderRadius: 21, background: C.sunken, display: 'flex', alignItems: 'center', paddingLeft: 18, fontSize: 16, fontWeight: 600, color: C.ink}}>
           arus-finance.farizz-a.workers.dev
         </div>
         <svg width={24} height={24} viewBox="0 0 24 24" style={{position: 'absolute', left: DOTS.x - 12, top: DOTS.y - 12}} fill={C.ink}>
@@ -178,15 +157,15 @@ const ChromeView = ({f}: {f: number}) => {
           <circle cx={12} cy={19} r={2.4} />
         </svg>
       </div>
-      <Dashboard top={118} />
+      <Dashboard f={f} top={92} />
       {f >= MENU_AT && (
-        <div style={{position: 'absolute', top: 70, right: 12, width: MENU_W, padding: '14px 0', borderRadius: 18, background: 'oklch(0.26 0.02 180)', boxShadow: '0 24px 60px oklch(0 0 0 / 0.55)', transformOrigin: 'top right', transform: `scale(${0.85 + 0.15 * open})`, opacity: Math.min(prog(f, MENU_AT, 8), 1 - close)}}>
+        <div style={{position: 'absolute', top: 70, right: 12, width: MENU_W, padding: '14px 0', borderRadius: 18, background: C.raised, boxShadow: '0 24px 60px oklch(0 0 0 / 0.3)', transformOrigin: 'top right', transform: `scale(${0.85 + 0.15 * open})`, opacity: Math.min(prog(f, MENU_AT, 8), 1 - close)}}>
           {MENU.map((label, i) => {
             const picked = i === PICK2;
             const lit = picked ? prog(f, ROW2_AT, 10) : 0;
-            const color = lit > 0 ? C.accentStrong : picked ? C.ink : C.inkSoft;
+            const color = lit > 0 ? C.accentInk : picked ? C.ink : C.inkSoft;
             return (
-              <div key={label} style={{height: 54, margin: '0 10px', borderRadius: 12, display: 'flex', alignItems: 'center', gap: 14, padding: '0 14px', background: `oklch(0.3 0.06 172 / ${lit})`, fontSize: 18, fontWeight: picked ? 800 : 600, color, transform: `translateX(${picked ? kick(f, TAP_ROW2, 4, 5) : 0}px)`}}>
+              <div key={label} style={{height: 54, margin: '0 10px', borderRadius: 12, display: 'flex', alignItems: 'center', gap: 14, padding: '0 14px', background: `oklch(0.95 0.045 160 / ${lit})`, fontSize: 18, fontWeight: picked ? 800 : 600, color, transform: `translateX(${picked ? kick(f, TAP_ROW2, 4, 5) : 0}px)`}}>
                 <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{flex: 'none'}}>
                   <path d={MENU_ICONS[i]} />
                 </svg>
@@ -212,7 +191,7 @@ const HomeScreen = ({f, android = false}: {f: number; android?: boolean}) => {
         const y = 90 + r * 120;
         if (r === SLOT.r && c === SLOT.c) {
           return (
-            <div key={i} style={{position: 'absolute', left: x, top: y, width: 76, textAlign: 'center', opacity: prog(f, ICON_AT, 6), transform: `scale(${0.6 + 0.4 * icon})`}}>
+            <div key={i} style={{position: 'absolute', left: x, top: y, width: 76, textAlign: 'center', opacity: prog(f, ICON_AT, 6), transform: `scale(${0.6 + 0.4 * icon}) rotate(${spin(f, ICON_AT, 24, -200)}deg)`}}>
               <Logo size={76} />
               <div style={{marginTop: 8, fontFamily: body, fontSize: 14, fontWeight: 600, color: '#fff'}}>Arus</div>
             </div>
@@ -246,7 +225,7 @@ const HomeScreen = ({f, android = false}: {f: number; android?: boolean}) => {
 
 const Chip = ({text, struck, show, f}: {text: string; struck?: number; show: number; f: number}) => (
   <div style={{position: 'absolute', top: 268, width: '100%', display: 'flex', justifyContent: 'center', opacity: show}}>
-    <div style={{position: 'relative', padding: '12px 30px', borderRadius: 999, background: C.surface, border: `2px solid ${C.glassLine}`, fontFamily: body, fontWeight: 800, fontSize: 34, color: struck ? C.inkFaint : C.ink, transform: `translateY(${(1 - show) * 24}px) translateX(${struck !== undefined ? kick(f, STORE_AT, 8, 6) : 0}px)`}}>
+    <div style={{position: 'relative', padding: '12px 30px', borderRadius: 999, background: C.raised, border: `2px solid ${C.line}`, fontFamily: body, fontWeight: 800, fontSize: 34, color: struck ? C.inkFaint : C.ink, transform: `translateY(${(1 - show) * 24}px) translateX(${struck !== undefined ? kick(f, STORE_AT, 8, 6) : 0}px)`}}>
       {text}
       {struck !== undefined && <span style={{position: 'absolute', left: 22, right: 22, top: '50%', height: 6, borderRadius: 3, background: C.expense, transform: `scaleX(${struck})`, transformOrigin: 'left'}} />}
     </div>
@@ -318,8 +297,8 @@ export const Scene = () => {
       <Ring f={f} at={TAP_MENU} x={DOTS_XY.x} y={DOTS_XY.y} r0={16} r1={80} dur={22} />
       <Ring f={f} at={TAP_ROW2} x={ROW2.x} y={ROW2.y} r0={16} r1={110} dur={22} />
       <Ring f={f} at={AGAIN_AT + 8} x={SLOT_XY.x} y={SLOT_XY.y} r0={40} r1={150} dur={26} />
-      <div style={{position: 'absolute', top: 1430, width: '100%', textAlign: 'center', fontFamily: body, fontWeight: 800, fontSize: 54, color: C.ink, ...fadeUp(prog(f, CAPTION_AT, 20))}}>
-        Seperti aplikasi biasa.
+      <div style={{position: 'absolute', top: 1430, width: '100%', textAlign: 'center', fontFamily: body, fontWeight: 800, fontSize: 54, color: C.onBand, ...fadeUp(prog(f, CAPTION_AT, 20))}}>
+        Seperti aplikasi <Marker at={CAPTION_AT + 16} f={f}>biasa.</Marker>
       </div>
     </AbsoluteFill>
   );

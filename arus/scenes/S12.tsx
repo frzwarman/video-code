@@ -1,8 +1,8 @@
 // S12 · 54.13–58.07s — Encrypted in transit and at rest: a packet leaves the phone, passes through the
 // first lock and comes out scrambled, then lands in the database as the second lock closes.
 import {AbsoluteFill, Easing, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, back, cue, fadeUp, lerp, prog} from '../core';
-import {scramble} from '../Fx';
+import {type CameraKey, type Cue, back, cue, fadeUp, lerp, prog, spin} from '../core';
+import {Marker, scramble} from '../Fx';
 import {Database, Device, Lock} from '../icons';
 import {C, body, display} from '../palette';
 
@@ -14,7 +14,7 @@ const LOCKS = [
 const PACKET = {leave: cue('S12', 0, 0.15), through: LOCKS[0].at, arrive: LOCKS[1].at};
 
 // Follow the packet along the line, then pull back for the caption.
-export const camera: CameraKey[] = [{at: PACKET.leave, zoom: 1.3, x: 460, y: 760, dur: 30}, {at: PACKET.through, zoom: 1.3, x: 700, y: 760, dur: PACKET.arrive - PACKET.through}, {at: PACKET.arrive + 10, zoom: 1, dur: 36}];
+export const camera: CameraKey[] = [{at: 0, zoom: 1.5, x: 300, y: 760, dur: 1}, {at: 8, zoom: 1, dur: 36}, {at: PACKET.leave, zoom: 1.3, x: 460, y: 760, dur: 30}, {at: PACKET.through, zoom: 1.3, x: 700, y: 760, dur: PACKET.arrive - PACKET.through}, {at: PACKET.arrive + 10, zoom: 1, dur: 36}];
 
 export const sfx: Cue[] = [{at: PACKET.leave, sound: 'tick', volume: 0.4}, ...LOCKS.map((l) => ({at: l.at + 10, sound: 'click', volume: 0.8}))];
 
@@ -22,10 +22,10 @@ const Badge = ({x, label, at, f}: {x: number; label: string; at: number; f: numb
   const inP = prog(f, at - 20, 18, back);
   return (
     <div style={{position: 'absolute', left: x - 70, top: Y + (x === 540 ? -70 : 50), width: 140, textAlign: 'center', ...fadeUp(inP, 20)}}>
-      <div style={{width: 140, height: 140, borderRadius: 40, background: C.accentSoft, display: 'grid', placeItems: 'center', transform: `scale(${1 + 0.1 * (f >= at ? Math.exp(-(f - at) / 6) : 0)})`}}>
+      <div style={{width: 140, height: 140, borderRadius: 40, background: C.accentSoft, display: 'grid', placeItems: 'center', transform: `scale(${1 + 0.1 * (f >= at ? Math.exp(-(f - at) / 6) : 0)}) rotate(${spin(f, at - 20, 22)}deg)`}}>
         <Lock size={84} color={C.accentStrong} open={1 - prog(f, at, 12)} />
       </div>
-      <div style={{fontFamily: body, fontWeight: 800, fontSize: 36, color: C.inkSoft, marginTop: 18}}>{label}</div>
+      <div style={{fontFamily: body, fontWeight: 800, fontSize: 36, color: C.onBandSoft, marginTop: 18}}>{label}</div>
     </div>
   );
 };
@@ -49,10 +49,10 @@ export const Scene = () => {
         <path d={`M300 ${Y} H${lerp(300, 780, line)}`} stroke={C.highlight} strokeWidth={8} strokeLinecap="round" opacity={line > 0 ? 1 : 0} />
       </svg>
       <div style={{position: 'absolute', left: 120, top: Y - 110, ...fadeUp(prog(f, 0, 20))}}>
-        <Device size={220} color={C.ink} />
+        <Device size={220} color={C.onBand} />
       </div>
       <div style={{position: 'absolute', left: 770, top: Y - 110, opacity: prog(f, 6, 20), transform: `translateY(${(1 - prog(f, 6, 20)) * 30}px) scale(${1 + 0.06 * (f >= PACKET.arrive ? Math.exp(-(f - PACKET.arrive) / 6) : 0)})`}}>
-        <Database size={220} color={C.ink} />
+        <Database size={220} color={C.onBand} />
       </div>
       {f >= PACKET.leave && (
         <div
@@ -65,7 +65,7 @@ export const Scene = () => {
             padding: '10px 24px',
             borderRadius: 999,
             background: encrypted ? C.accentSoft : C.ink,
-            color: encrypted ? C.accentStrong : C.surface,
+            color: encrypted ? C.accentStrong : C.onAccent,
             fontFamily: 'ui-monospace, SF Mono, Menlo, monospace',
             fontWeight: 700,
             fontSize: 34,
@@ -78,8 +78,8 @@ export const Scene = () => {
       {LOCKS.map((l) => (
         <Badge key={l.label} {...l} f={f} />
       ))}
-      <div style={{position: 'absolute', top: 1140, left: 90, right: 90, textAlign: 'center', fontFamily: display, fontWeight: 700, fontSize: 66, lineHeight: 1.25, color: C.ink, ...fadeUp(prog(f, PACKET.arrive + 30, 24))}}>
-        Terenkripsi saat dikirim & disimpan
+      <div style={{position: 'absolute', top: 1140, left: 90, right: 90, textAlign: 'center', fontFamily: display, fontSize: 66, lineHeight: 1.25, fontWeight: 800, color: C.onBand, ...fadeUp(prog(f, PACKET.arrive + 30, 24))}}>
+        Terenkripsi saat <Marker at={PACKET.arrive + 46} f={f}>dikirim</Marker> & <Marker at={PACKET.arrive + 58} f={f}>disimpan</Marker>
       </div>
     </AbsoluteFill>
   );

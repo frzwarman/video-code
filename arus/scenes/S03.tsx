@@ -1,11 +1,11 @@
 // S3 — Hook C: transfer receipt, double-tap the back, pick the category from the list the Shortcut shows,
 // notification, logged. (Known payees skip the list: Arus files them itself.)
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, back, cue, kick, prog} from '../core';
-import {Ring, ScanBeam} from '../Fx';
+import {type CameraKey, type Cue, back, cue, kick, prog, spin} from '../core';
+import {Marker, Ring, ScanBeam, YELLOW_MARK} from '../Fx';
 import {Coffee} from '../icons';
-import {Phone} from '../Phone';
-import {C, body, display} from '../palette';
+import {Phone, bezel} from '../Phone';
+import {C, OS, body, display} from '../palette';
 import {Sticker} from '../Sticker';
 
 // VO: "Habis transfer? Ketuk DUA kali bagian belakang iPhone-mu." | "Pilih kategorinya," | "dan LANGSUNG tercatat."
@@ -19,6 +19,8 @@ const NOTIFY_AT = cue('S3', 2) - 8;
 const LOGGED_AT = cue('S3', 2) + 12;
 
 export const camera: CameraKey[] = [
+  {at: 0, zoom: 1.25, x: 540, y: 700, dur: 1},
+  {at: TAPS[0] - 16, zoom: 1, dur: 24},
   {at: LIST_AT, zoom: 1.5, x: 540, y: 1040, dur: 20},
   {at: NOTIFY_AT, zoom: 1.6, x: 540, y: 500, dur: 18},
   {at: LOGGED_AT, zoom: 1, dur: 30},
@@ -34,7 +36,8 @@ export const sfx: Cue[] = [
 ];
 
 const PHONE = {left: 280, top: 280, w: 520, h: 1120};
-const SCREEN_H = PHONE.h - 28;
+const BZ = bezel(PHONE.w, PHONE.h);
+const SCREEN_H = BZ.screenH;
 const CATEGORIES = ['Makan', 'Transport', 'Belanja', 'Tagihan', 'Hiburan', 'Lainnya'];
 const PICK = 0;
 const SHEET_H = 560;
@@ -99,19 +102,19 @@ const Notification = ({p}: {p: number}) => (
       right: 14,
       padding: '24px 26px',
       borderRadius: 40,
-      background: 'oklch(0.24 0.025 180 / 0.96)',
-      border: `2px solid ${C.glassLine}`,
+      background: OS.bg,
+      border: `2px solid ${OS.line}`,
       fontFamily: body,
       transform: `translateY(${(1 - p) * -260}px)`,
       boxShadow: '0 24px 48px -20px oklch(0 0 0 / 0.6)',
     }}
   >
-    <div style={{display: 'flex', alignItems: 'center', gap: 14, fontSize: 25, fontWeight: 600, color: C.inkSoft, letterSpacing: 1}}>
+    <div style={{display: 'flex', alignItems: 'center', gap: 14, fontSize: 25, fontWeight: 600, color: OS.soft, letterSpacing: 1}}>
       <div style={{width: 40, height: 40, borderRadius: 11, background: `linear-gradient(135deg, ${C.logoA}, ${C.logoB})`}} />
       <span style={{flex: 1}}>SHORTCUTS</span>
       <span style={{letterSpacing: 0}}>sekarang</span>
     </div>
-    <div style={{fontSize: 35, fontWeight: 700, color: C.ink, marginTop: 14, lineHeight: 1.3}}>
+    <div style={{fontSize: 35, fontWeight: 700, color: OS.ink, marginTop: 14, lineHeight: 1.3}}>
       Spent Rp 152.500 · KEDAI KOPI · Makan · BCA
     </div>
   </div>
@@ -162,7 +165,7 @@ export const Scene = () => {
         <Picker f={f} />
         {f >= NOTIFY_AT && <Notification p={notify} />}
       </Phone>
-      <Ring f={f} at={PICK_AT} x={540} y={PHONE.top + 14 + ROW_Y(PICK)} r0={16} r1={110} dur={22} color={C.accent} />
+      <Ring f={f} at={PICK_AT} x={540} y={PHONE.top + BZ.inset + ROW_Y(PICK)} r0={16} r1={110} dur={22} color={C.accent} />
       {f >= TAPS[0] && (
         <div
           style={{
@@ -174,7 +177,7 @@ export const Scene = () => {
             fontSize: 84,
             color: C.highlight,
             opacity: prog(f, TAPS[0], 10) * (1 - prog(f, LIST_AT + 6, 16)),
-            transform: `scale(${0.6 + 0.4 * prog(f, TAPS[0], 16, back)})`,
+            transform: `scale(${0.6 + 0.4 * prog(f, TAPS[0], 16, back)}) rotate(${spin(f, TAPS[0], 18, -40)}deg)`,
           }}
         >
           2×
@@ -209,7 +212,7 @@ export const Scene = () => {
           <svg width={48} height={48} viewBox="0 0 24 24">
             <path d="M5 12.5l4.5 4.5L19 7.5" stroke={C.income} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" fill="none" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - prog(f, LOGGED_AT + 6, 12)} />
           </svg>
-          Langsung tercatat.
+          <Marker at={LOGGED_AT + 12} f={f} color={YELLOW_MARK}>Langsung</Marker>&nbsp;tercatat.
         </div>
       </div>
     </AbsoluteFill>

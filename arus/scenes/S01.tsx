@@ -3,7 +3,7 @@ import {AbsoluteFill, interpolateColors, random, useCurrentFrame} from 'remotion
 import {type CameraKey, type Cue, cue, prog, rupiah} from '../core';
 import {Bag, Bus, Coffee, Receipt, Ticket} from '../icons';
 import {C, body, display} from '../palette';
-import {FlyChip} from '../Fx';
+import {FlyChip, Marker} from '../Fx';
 import {Sticker} from '../Sticker';
 
 const WORDS = 'Bulan lalu, uangmu habis ke mana?'.split(' ');
@@ -49,39 +49,25 @@ export const Scene = () => {
       {STICKERS.map(({step: s, x, y}) => (
         <FlyChip key={`c${s}`} f={f} at={stepFrame(s)} dur={18} from={{x: 540, y: 1160}} to={{x: x + 75, y: y + 75}} text={'−' + rupiah((s === 1 ? FROM : stepValue(s - 1)) - stepValue(s))} />
       ))}
-      <div style={{position: 'absolute', top: 560, left: 90, right: 90, textAlign: 'center'}}>
+      <div style={{position: 'absolute', top: 560, left: 90, right: 90, textAlign: 'center', fontFamily: display, fontWeight: 800, fontSize: 92, lineHeight: 1.15, color: C.onBand}}>
         {WORDS.map((w, i) => {
           const p = prog(f, i * 4, 22);
           return (
-            <span
-              key={i}
-              style={{
-                display: 'inline-block',
-                marginRight: '0.28em',
-                fontFamily: display,
-                fontWeight: 700,
-                fontSize: 92,
-                lineHeight: 1.15,
-                color: C.ink,
-                opacity: p,
-                transform: `translateY(${(1 - p) * 40}px)`,
-                filter: p < 1 ? `blur(${(1 - p) * 10}px)` : undefined,
-              }}
-            >
-              {w}
+            <span key={i} style={{display: 'inline-block', marginRight: '0.28em', opacity: p, transform: `translateY(${(1 - p) * 40}px)`, filter: p < 1 ? `blur(${(1 - p) * 10}px)` : undefined}}>
+              {i === WORDS.length - 1 ? <Marker at={cue('S1', 0, 0.8)} f={f}>{w}</Marker> : w}
             </span>
           );
         })}
       </div>
       <div style={{position: 'absolute', top: 1010, width: '100%', textAlign: 'center', opacity: counterIn}}>
-        <div style={{fontFamily: body, fontWeight: 600, fontSize: 40, letterSpacing: 6, color: C.onBgSoft}}>SALDO</div>
+        <div style={{fontFamily: body, fontWeight: 600, fontSize: 40, letterSpacing: 6, color: C.onBandSoft}}>SALDO</div>
         <div
           style={{
             fontFamily: body,
             fontWeight: 800,
             fontSize: 124,
             fontVariantNumeric: 'tabular-nums',
-            color: interpolateColors(done, [0, 1], [C.ink, C.expense]),
+            color: interpolateColors(done, [0, 1], [C.onBand, C.expenseOnBand]),
             transform: `scale(${f >= END ? punch : 1})`,
           }}
         >

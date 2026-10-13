@@ -1,8 +1,8 @@
 // S2 · 3.22–9.27s — Hook B: the bank shows what's left, Arus shows where it went.
 import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
 import {type CameraKey, type Cue, cue, prog, roundK, rupiah} from '../core';
-import {FlowDots} from '../Fx';
-import {C, body, display, glass} from '../palette';
+import {FlowDots, Marker} from '../Fx';
+import {C, body, display, panel} from '../palette';
 
 const ARUS_AT = cue('S2', 1); // VO: "Arus kasih tahu ke mana perginya."
 const LINES_AT = ARUS_AT + 30;
@@ -23,7 +23,7 @@ export const camera: CameraKey[] = [{at: 0, zoom: 1.2, x: 540, y: 560, dur: 1}, 
 
 export const sfx: Cue[] = [{at: ARUS_AT, sound: 'hit', volume: 0.8}];
 
-const label = (text: string, color: string, top: number, p: number) => (
+const label = (text: React.ReactNode, color: string, top: number, p: number) => (
   <div
     style={{
       position: 'absolute',
@@ -49,7 +49,7 @@ export const Scene = () => {
 
   return (
     <AbsoluteFill>
-      {label('sisa', C.onBgSoft, 230, topIn * dim)}
+      {label('sisa', C.onBandSoft, 230, topIn * dim)}
       {/* Generic bank-style card: flat, grey, one number. */}
       <div
         style={{
@@ -74,10 +74,10 @@ export const Scene = () => {
         <div style={{fontWeight: 800, fontSize: 96}}>{rupiah(312_000)}</div>
       </div>
 
-      {label('perginya', C.highlight, 850, arusIn)}
+      {label(<Marker at={ARUS_AT + 14} f={f}>perginya</Marker>, C.highlight, 850, arusIn)}
       <div
         style={{
-          ...glass,
+          ...panel,
           position: 'absolute',
           top: 980,
           left: 80,
@@ -91,7 +91,7 @@ export const Scene = () => {
         <svg width={920} height={560} style={{position: 'absolute', inset: 0}}>
           <circle cx={SRC.x} cy={SRC.y} r={14} fill={C.accent} />
           {ROWS.map((_, i) => (
-            <FlowDots key={`d${i}`} d={branch(i)} f={f} from={LINES_AT + i * 16 + 12} color={C.highlight} count={3} speed={5} r={6} reveal={prog(f, LINES_AT + i * 16, 40)} />
+            <FlowDots key={`d${i}`} d={branch(i)} f={f} from={LINES_AT + i * 16 + 12} color={C.accentStrong} count={3} speed={5} r={6} reveal={prog(f, LINES_AT + i * 16, 40)} />
           ))}
           {ROWS.map((_, i) => {
             const p = prog(f, LINES_AT + i * 16, 40);

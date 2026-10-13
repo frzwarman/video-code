@@ -2,9 +2,9 @@
 // never sent: once read, it dissolves.
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {type CameraKey, type Cue, cue, fadeUp, lerp, prog} from '../core';
-import {ScanBeam} from '../Fx';
+import {Marker, ScanBeam} from '../Fx';
 import {Logo} from '../Logo';
-import {Phone} from '../Phone';
+import {Phone, bezel} from '../Phone';
 import {C, body, display} from '../palette';
 
 // VO: "Screenshot struk dibaca di iPhone-mu SENDIRI." | "Gambarnya TIDAK PERNAH disimpan, apalagi dikirim."
@@ -14,11 +14,12 @@ const GONE_AT = cue('S11', 1, 0.3); // "…TIDAK PERNAH disimpan": the image dis
 const CAPTION_AT = cue('S11', 1, 0.8);
 const LINES = ['Rp 152.500', 'KEDAI KOPI', '07 Okt 2026'];
 const PHONE = {left: 310, top: 420, w: 460, h: 940};
-const lineY = (i: number) => PHONE.top + 14 + 300 + i * 90; // centre of each line on the shot
+const lineY = (i: number) => PHONE.top + bezel(PHONE.w, PHONE.h).inset + 300 + i * 90; // centre of each line on the shot
 const PILL_Y = 250; // where the text goes: Arus
 const arrival = (i: number) => SEND_AT + i * 8 + 44;
 
 export const camera: CameraKey[] = [
+  {at: 0, zoom: 1.3, x: 540, y: 820, dur: 1},
   {at: READ_AT - 10, zoom: 1.45, x: 540, y: 740, dur: 30},
   {at: SEND_AT, zoom: 1, dur: 30},
   {at: GONE_AT - 6, zoom: 1.35, x: 540, y: 740, dur: 24},
@@ -101,7 +102,7 @@ export const Scene = () => {
           padding: '14px 30px 14px 18px',
           borderRadius: 999,
           background: C.surface,
-          border: `2px solid ${C.glassLine}`,
+          border: `2px solid ${C.line}`,
           opacity: prog(f, SEND_AT - 14, 16),
           transform: `translateX(-50%) translateY(${(1 - prog(f, SEND_AT - 14, 16)) * -24}px) scale(${1 + 0.08 * LINES.reduce((s, _, i) => s + (f >= arrival(i) ? Math.exp(-(f - arrival(i)) / 5) : 0), 0)})`,
         }}
@@ -109,8 +110,8 @@ export const Scene = () => {
         <Logo size={52} />
         <span style={{fontFamily: display, fontWeight: 700, fontSize: 40, color: C.ink}}>Arus</span>
       </div>
-      <div style={{position: 'absolute', top: 1400, width: '100%', textAlign: 'center', fontFamily: body, fontWeight: 800, fontSize: 48, lineHeight: 1.25, color: C.ink, ...fadeUp(prog(f, CAPTION_AT, 20))}}>
-        Hanya teksnya yang dikirim.
+      <div style={{position: 'absolute', top: 1400, width: '100%', textAlign: 'center', fontFamily: body, fontWeight: 800, fontSize: 48, lineHeight: 1.25, color: C.onBand, ...fadeUp(prog(f, CAPTION_AT, 20))}}>
+        <Marker at={CAPTION_AT + 12} f={f}>Hanya teksnya</Marker> yang dikirim.
         <br />
         Gambarnya tidak disimpan.
       </div>

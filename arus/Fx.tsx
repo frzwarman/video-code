@@ -1,6 +1,6 @@
 // Shared motion assets. Everything here is a pure function of the frame passed in.
 import {getLength, getPointAtLength} from '@remotion/paths';
-import {useMemo} from 'react';
+import {useMemo, type ReactNode} from 'react';
 import {Easing, random} from 'remotion';
 import {lerp, prog, swift} from './core';
 import {C, body} from './palette';
@@ -41,7 +41,7 @@ export const FlowDots = ({d, f, from, color, count = 4, speed = 7, r = 7, reveal
 };
 
 /** A small pill that flies from one point to another on an arc, then fades. */
-export const FlyChip = ({f, at, dur = 22, from, to, text, color = C.expense, ink = C.surface}: {f: number; at: number; dur?: number; from: {x: number; y: number}; to: {x: number; y: number}; text: string; color?: string; ink?: string}) => {
+export const FlyChip = ({f, at, dur = 22, from, to, text, color = C.expense, ink = C.onAccent}: {f: number; at: number; dur?: number; from: {x: number; y: number}; to: {x: number; y: number}; text: string; color?: string; ink?: string}) => {
   const p = prog(f, at, dur, swift);
   if (f < at || p >= 1) return null;
   const x = lerp(from.x, to.x, p);
@@ -86,3 +86,13 @@ export const scramble = (text: string, p: number, f: number, seed: string) => {
     .map((ch, i) => (ch === ' ' || i / text.length >= p ? ch : glyphs[Math.floor(random(`${seed}-${bucket}-${i}`) * glyphs.length)]))
     .join('');
 };
+
+/** A highlighter stroke drawn under a word, left to right, at frame `at`. Wrap the word. */
+export const Marker = ({children, at, f, color = 'oklch(0.93 0.11 165 / 0.42)', dur = 14}: {children: ReactNode; at: number; f: number; color?: string; dur?: number}) => (
+  <span style={{position: 'relative', display: 'inline-block', whiteSpace: 'nowrap'}}>
+    <span style={{position: 'absolute', left: '-0.08em', right: '-0.08em', bottom: '0.04em', height: '0.46em', borderRadius: '0.1em', background: color, transform: `scaleX(${prog(f, at, dur)}) skewX(-10deg)`, transformOrigin: 'left center'}} />
+    <span style={{position: 'relative'}}>{children}</span>
+  </span>
+);
+/** The highlighter on a white panel: classic yellow. */
+export const YELLOW_MARK = 'oklch(0.9 0.17 95 / 0.55)';

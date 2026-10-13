@@ -75,3 +75,6 @@ export const cameraAt = (keys: CameraKey[] | undefined, f: number) => {
   }
   return state;
 };
+
+/** A spin into place: degrees from `from` to 0 over `dur` frames after `at`, eased out. */
+export const spin = (f: number, at: number, dur = 24, from = -150) => lerp(from, 0, prog(f, at, dur));

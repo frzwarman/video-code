@@ -1,5 +1,6 @@
-// Teal background for the whole film, with faint rising wave lines built from the logo's wave.
-// The waves hold still inside a scene and glide one half-step at each scene cut (with the sweep).
+// The film's background is the app's Home band: jade, a mint glow, slow white currents (arus = current).
+// The currents drift steadily along their own direction (a current never stops) and glide one extra
+// half-step at each scene cut (with the sweep).
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {prog} from './core';
 import {C} from './palette';
@@ -12,14 +13,13 @@ const LINES = Array.from({length: 14}, (_, i) => wave(-20 * K, 300 + i * 230, 7)
 
 export const Backdrop = ({cuts, sweep}: {cuts: number[]; sweep: number}) => {
   const f = useCurrentFrame();
-  const steps = cuts.reduce((n, at) => n + prog(f, at - sweep / 2, sweep), 0);
-  const dx = 5 * K * steps;
-  const dy = -2 * K * steps;
+  const DRIFT = 36; // seconds per half-step: slow enough to feel like water, never like a screensaver
+  const steps = cuts.reduce((n, at) => n + prog(f, at - sweep / 2, sweep), 0) + f / 60 / DRIFT;
   // Wrap after a full period (two half-steps) so the pattern never drifts off the frame.
   const period = steps % 2;
   return (
-    <AbsoluteFill style={{background: `linear-gradient(170deg, ${C.bgTop} 0%, ${C.bg} 45%, ${C.bgBottom} 100%)`}}>
-      <AbsoluteFill style={{background: 'radial-gradient(900px 700px at 90% 8%, rgb(63 214 173 / 0.28), transparent 70%), radial-gradient(800px 800px at 0% 100%, rgb(5 40 34 / 0.45), transparent 70%)'}} />
+    <AbsoluteFill style={{background: `linear-gradient(160deg, ${C.bandFrom} 0%, ${C.bandTo} 100%)`}}>
+      <AbsoluteFill style={{background: `radial-gradient(900px 620px at 88% 0%, color-mix(in oklch, ${C.bandGlow} 45%, transparent), transparent 70%), radial-gradient(800px 800px at 0% 100%, oklch(0.36 0.08 165 / 0.5), transparent 70%)`}} />
       <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
         <g transform={`translate(${5 * K * period} ${-2 * K * period})`} fill="none" stroke="#fff" strokeLinecap="round">
           {LINES.map((d, i) => (

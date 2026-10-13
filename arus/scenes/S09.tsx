@@ -2,7 +2,7 @@
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {type CameraKey, type Cue, cue, fadeUp, prog} from '../core';
 import {Lock} from '../icons';
-import {Ring} from '../Fx';
+import {Marker, Ring} from '../Fx';
 import {C, display} from '../palette';
 
 const SHUT_AT = cue('S9', 0, 0.9);
@@ -20,7 +20,9 @@ export const Scene = () => {
       <div style={{opacity: inP, transform: `translateY(${(1 - inP) * 30}px) scale(${1 + (f >= SHUT_AT ? 0.12 * Math.exp(-(f - SHUT_AT) / 6) : 0)})`}}>
         <Lock size={160} color={C.highlight} open={1 - prog(f, SHUT_AT - 14, 14)} />
       </div>
-      <div style={{fontFamily: display, fontWeight: 700, fontSize: 96, color: C.ink, ...fadeUp(titleP, 40), filter: titleP < 1 ? `blur(${(1 - titleP) * 8}px)` : undefined}}>Soal keamanan:</div>
+      <div style={{fontFamily: display, fontSize: 96, fontWeight: 800, color: C.onBand, ...fadeUp(titleP, 40), filter: titleP < 1 ? `blur(${(1 - titleP) * 8}px)` : undefined}}>
+        Soal <Marker at={SHUT_AT + 4} f={f}>keamanan:</Marker>
+      </div>
     </AbsoluteFill>
   );
 };
