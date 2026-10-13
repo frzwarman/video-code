@@ -96,7 +96,7 @@ const Stat = ({label, value, tone, emphasis, lit, f, at}: {label: string; value:
 );
 
 const Chart = ({f}: {f: number}) => {
-  const w = 362;
+  const w = 330; // the card body's inner width
   const h = 224;
   const max = 6_000_000;
   const y = (v: number) => 8 + (h - 30 - 8) * (1 - v / max);
@@ -109,17 +109,17 @@ const Chart = ({f}: {f: number}) => {
         </g>
       ))}
       {SERIES.map(([inc, exp], i) => {
-        const gx = 56 + i * 52;
+        const gx = 50 + i * 44;
         const p = prog(f, 8 + i * 5, 30);
         const bar = (v: number, x: number, color: string) => {
           const top = y(v * p);
-          return <rect x={x} y={top} width={18} height={y(0) - top} rx={4} fill={color} />;
+          return <rect x={x} y={top} width={16} height={y(0) - top} rx={4} fill={color} />;
         };
         return (
           <g key={i}>
             {bar(inc, gx, INC)}
-            {bar(exp, gx + 22, EXP)}
-            <text x={gx + 20} y={h - 8} fontSize={12} fill={C.inkSoft} textAnchor="middle" fontFamily={body}>{MONTHS[i]}</text>
+            {bar(exp, gx + 20, EXP)}
+            <text x={gx + 18} y={h - 8} fontSize={12} fill={C.inkSoft} textAnchor="middle" fontFamily={body}>{MONTHS[i]}</text>
           </g>
         );
       })}

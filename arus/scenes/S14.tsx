@@ -200,8 +200,8 @@ const ChromeView = ({f}: {f: number}) => {
   );
 };
 
-// A home screen of neutral tiles, one slot empty until Arus pops into it.
-const HomeScreen = ({f}: {f: number}) => {
+// A home screen of neutral tiles, one slot empty until Arus pops into it. The Android one has a search pill for a dock.
+const HomeScreen = ({f, android = false}: {f: number; android?: boolean}) => {
   const icon = prog(f, ICON_AT, 20, back);
   return (
     <div style={{position: 'absolute', inset: 0, background: 'linear-gradient(160deg, oklch(0.34 0.06 210), oklch(0.2 0.05 265))'}}>
@@ -225,11 +225,21 @@ const HomeScreen = ({f}: {f: number}) => {
           </div>
         );
       })}
-      <div style={{position: 'absolute', left: 18, right: 18, bottom: 22, height: 96, borderRadius: 30, background: 'oklch(1 0 0 / 0.14)', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
-        {[20, 21, 22, 23].map((i) => (
-          <div key={i} style={{width: 72, height: 72, borderRadius: 18, background: tileColor(i)}} />
-        ))}
-      </div>
+      {android ? (
+        <div style={{position: 'absolute', left: 24, right: 24, bottom: 30, height: 64, borderRadius: 32, background: 'oklch(1 0 0 / 0.16)', display: 'flex', alignItems: 'center', gap: 14, padding: '0 22px', boxSizing: 'border-box'}}>
+          <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="oklch(1 0 0 / 0.8)" strokeWidth={2.2} strokeLinecap="round">
+            <circle cx={11} cy={11} r={7} />
+            <path d="M20 20l-4-4" />
+          </svg>
+          <div style={{width: 120, height: 10, borderRadius: 5, background: 'oklch(1 0 0 / 0.4)'}} />
+        </div>
+      ) : (
+        <div style={{position: 'absolute', left: 18, right: 18, bottom: 22, height: 96, borderRadius: 30, background: 'oklch(1 0 0 / 0.14)', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
+          {[20, 21, 22, 23].map((i) => (
+            <div key={i} style={{width: 72, height: 72, borderRadius: 18, background: tileColor(i)}} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -276,23 +286,32 @@ export const Scene = () => {
       {/* Nothing to download: the store chip is struck through. Later the chip names the Android route. */}
       <Chip text="App Store" struck={store} show={prog(f, 8, 20) * (1 - android)} f={f} />
       <Chip text="Android · Chrome" show={android} f={f} />
-      <Phone w={PHONE.w} h={PHONE.h} screen={C.surface} style={{left: PHONE.left, top: PHONE.top, borderRadius: 78, ...fadeUp(phoneIn, 90)}}>
+      {/* The iPhone: Safari, the share sheet, the home screen. */}
+      <Phone w={PHONE.w} h={PHONE.h} screen={C.surface} style={{left: PHONE.left, top: PHONE.top, borderRadius: 78, opacity: phoneIn * (1 - android), transform: `translateY(${(1 - phoneIn) * 90}px) scale(${1 - 0.03 * android})`}}>
         <div style={{position: 'absolute', inset: 0, opacity: 1 - home, transform: `scale(${1 - 0.04 * home})`}}>
           <SafariView f={f} />
           <div style={{position: 'absolute', inset: 0, background: `oklch(0 0 0 / ${dim.toFixed(3)})`}} />
           <Sheet f={f} />
         </div>
         {f >= HOME_AT && (
-          <div style={{position: 'absolute', inset: 0, opacity: Math.min(1, home * (1 - android) + again), transform: `scale(${1.05 - 0.05 * home})`}}>
+          <div style={{position: 'absolute', inset: 0, opacity: home, transform: `scale(${1.05 - 0.05 * home})`}}>
             <HomeScreen f={f} />
           </div>
         )}
-        {f >= ANDROID_AT && (
-          <div style={{position: 'absolute', inset: 0, opacity: android * (1 - again), transform: `scale(${1.04 - 0.04 * android})`}}>
+      </Phone>
+      {/* An Android phone takes its place: Chrome, the menu, then its own home screen. */}
+      {f >= ANDROID_AT && (
+        <Phone variant="android" w={PHONE.w} h={PHONE.h} screen={C.surface} style={{left: PHONE.left, top: PHONE.top, opacity: android, transform: `scale(${0.97 + 0.03 * android})`}}>
+          <div style={{position: 'absolute', inset: 0, opacity: 1 - again}}>
             <ChromeView f={f} />
           </div>
-        )}
-      </Phone>
+          {f >= AGAIN_AT && (
+            <div style={{position: 'absolute', inset: 0, opacity: again, transform: `scale(${1.04 - 0.04 * again})`}}>
+              <HomeScreen f={f} android />
+            </div>
+          )}
+        </Phone>
+      )}
       <Ring f={f} at={TAP_SHARE} x={SHARE.x} y={SHARE.y} r0={16} r1={90} dur={22} />
       <Ring f={f} at={TAP_ROW} x={ROW.x} y={ROW.y} r0={16} r1={110} dur={22} />
       <Ring f={f} at={ICON_AT} x={SLOT_XY.x} y={SLOT_XY.y} r0={40} r1={170} dur={26} />
