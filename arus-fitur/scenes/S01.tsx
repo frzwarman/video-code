@@ -2,7 +2,7 @@
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {type CameraKey, type Cue, back, fadeUp, inOut, lerp, prog, spin} from '../../lib/core';
 import {Marker} from '../../lib/Fx';
-import {Logo} from '../../lib/Logo';
+import {Logo3D} from '../../lib/Logo3D';
 import {Lucide, type IconName} from '../../lib/lucide';
 import {C, body, display, pop, type Tone} from '../../lib/palette';
 import {cue, voiceEnd} from '../voice';
@@ -73,8 +73,8 @@ export const Scene = () => {
         );
       })}
       {f >= LOGO_AT && (
-        <div style={{position: 'absolute', left: 540 - 110, top: ROW_Y - 110, opacity: prog(f, LOGO_AT, 8), transform: `scale(${0.5 + 0.5 * logo}) rotate(${spin(f, LOGO_AT, 28, -200)}deg)`}}>
-          <Logo size={220} />
+        <div style={{position: 'absolute', left: 540 - 110, top: ROW_Y - 110, opacity: prog(f, LOGO_AT, 8), transform: `scale(${0.5 + 0.5 * logo})`}}>
+          <Logo3D size={220} turn={spin(f, LOGO_AT, 28, -200)} />
         </div>
       )}
       <div style={{position: 'absolute', top: 1240, width: '100%', textAlign: 'center', fontFamily: body, fontWeight: 700, fontSize: 48, color: C.onBandSoft, ...fadeUp(prog(f, CAPTION_AT, 20))}}>

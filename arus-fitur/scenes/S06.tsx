@@ -1,10 +1,10 @@
 // S6 — Foto profil: Settings → profile. A photo is picked, Arus crops the centre square and stores it small;
-// it shows in the profile ring and the Me tab right away.
+// it shows in the profile ring right away, then on Home, over the wave mark.
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import type {CSSProperties} from 'react';
 import {type CameraKey, type Cue, back, fadeUp, inOut, lerp, prog} from '../../lib/core';
 import {Ring} from '../../lib/Fx';
-import {APP_W, TabBar} from '../../lib/Home';
+import {APP_W, HOME, Home, TabBar} from '../../lib/Home';
 import {Lucide} from '../../lib/lucide';
 import {C, body} from '../../lib/palette';
 import {Phone, bezel} from '../../lib/Phone';
@@ -22,7 +22,7 @@ const CROP_AT = cue('S6', 2, 0.3); // "persegi": the centre square is marked
 const SHRINK_AT = cue('S6', 2, 0.68); // "menyimpannya kecil": it shrinks into the ring
 const ARRIVE = SHRINK_AT + 30;
 const TOAST_AT = ARRIVE + 8;
-const ME_AT = cue('S6', 3, 0.15); // "di profilmu": the Me tab carries it too
+const HOME_AT = cue('S6', 3); // "Langsung tampil di profilmu": Home is tapped, and your picture is on it
 
 const PHONE = {left: 240, top: 300, w: 600, h: 1300};
 const BZ = bezel(PHONE.w, PHONE.h);
@@ -38,13 +38,14 @@ const PICKER_H = 44 + TILE * 2 + 3 + 28;
 const PHOTO_BTN = toScene(181, 186);
 const PICK = toScene(197, SCREEN_H - PICKER_H + 44 + TILE + 3 + TILE / 2);
 const AVATAR_AT = toScene(AVATAR.x, AVATAR.y);
-const ME_TAB = toScene(348, SCREEN_H - 62);
+const HOME_TAB = toScene(46, SCREEN_H - 62);
+const HOME_AVATAR = toScene(HOME.avatar.x, HOME.avatar.y);
 
 export const camera: CameraKey[] = [
   {at: 0, zoom: 1.3, x: 540, y: 560, dur: 1},
   {at: PICKER_UP + 6, zoom: 1.35, x: 540, y: 1250, dur: 30},
   {at: PHOTO_AT, zoom: 1.3, x: 540, y: 900, dur: 30},
-  {at: ME_AT, zoom: 1.7, x: ME_TAB.x, y: ME_TAB.y, dur: 36},
+  {at: HOME_AT + 8, zoom: 1.8, x: HOME_AVATAR.x, y: HOME_AVATAR.y + 60, dur: 36},
 ];
 
 export const sfx: Cue[] = [
@@ -57,7 +58,7 @@ export const sfx: Cue[] = [
   {at: SHRINK_AT, sound: 'whoosh', volume: 0.35},
   {at: ARRIVE, sound: 'snap', volume: 0.7},
   {at: TOAST_AT, sound: 'ding', volume: 0.5},
-  {at: ME_AT + 10, sound: 'click', volume: 0.5},
+  {at: HOME_AT, sound: 'tap', volume: 0.7},
 ];
 
 // A neutral picture, not a person: sky, sun, two hills. Sized in % so it reads the same at every scale.
@@ -81,6 +82,7 @@ export const Scene = () => {
   const sx = lerp(SQ.x, AVATAR.x - AVATAR.r, fly);
   const sy = lerp(SQ.y, AVATAR.y - AVATAR.r, fly);
   const toast = prog(f, TOAST_AT, 18, back);
+  const home = prog(f, HOME_AT + 2, 16);
 
   return (
     <AbsoluteFill>
@@ -121,7 +123,12 @@ export const Scene = () => {
               </div>
             </div>
           </div>
-          <TabBar active="Me" avatar={landed ? <Photo w={36} h={24} style={{position: 'absolute', left: -6, top: 0}} /> : undefined} />
+          {f >= HOME_AT && (
+            <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: C.surface, opacity: home, transform: `translateY(${(1 - home) * 24}px)`}}>
+              <Home f={f} avatar={<Photo w={96} h={64} style={{position: 'absolute', left: -16, top: 0}} />} />
+            </div>
+          )}
+          <TabBar active={f >= HOME_AT ? 'Home' : 'Me'} avatar={landed ? <Photo w={36} h={24} style={{position: 'absolute', left: -6, top: 0}} /> : undefined} />
           {/* The picked photo, floating over the page; then the centre square is marked. */}
           {f >= PHOTO_AT && f < SHRINK_AT + 10 && (
             <div style={{position: 'absolute', left: CARD.x, top: CARD.y, width: CARD.w, height: CARD.h, borderRadius: 16, overflow: 'hidden', boxShadow: '0 30px 60px -24px oklch(0.3 0.06 168 / 0.55)', opacity: prog(f, PHOTO_AT, 8) * (1 - prog(f, SHRINK_AT, 10)), transform: `scale(${0.8 + 0.2 * photoIn})`}}>
@@ -141,7 +148,7 @@ export const Scene = () => {
             </>
           )}
           {f >= TOAST_AT && (
-            <div style={{position: 'absolute', left: 16, right: 16, bottom: 100, ...PANEL, borderRadius: 16, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 12, opacity: prog(f, TOAST_AT, 8), transform: `translateY(${(1 - toast) * 40}px)`}}>
+            <div style={{position: 'absolute', left: 16, right: 16, bottom: 100, ...PANEL, borderRadius: 16, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 12, opacity: prog(f, TOAST_AT, 8) * (1 - prog(f, HOME_AT, 8)), transform: `translateY(${(1 - toast) * 40}px)`}}>
               <span style={{display: 'grid', placeItems: 'center', width: 32, height: 32, borderRadius: '50%', background: C.incomeSoft}}>
                 <Lucide name="circleCheck" size={18} color={C.income} />
               </span>
@@ -170,7 +177,8 @@ export const Scene = () => {
       <Ring f={f} at={TAP_PHOTO} x={PHOTO_BTN.x} y={PHOTO_BTN.y} r0={16} r1={90} dur={22} color={C.accent} />
       <Ring f={f} at={TAP_PICK} x={PICK.x} y={PICK.y} r0={20} r1={120} dur={22} color={C.accent} />
       <Ring f={f} at={ARRIVE} x={AVATAR_AT.x} y={AVATAR_AT.y} r0={50} r1={140} dur={28} color={C.accent} />
-      <Ring f={f} at={ME_AT + 10} x={ME_TAB.x} y={ME_TAB.y} r0={20} r1={80} dur={26} color={C.accent} width={4} />
+      <Ring f={f} at={HOME_AT} x={HOME_TAB.x} y={HOME_TAB.y} r0={20} r1={80} dur={22} color={C.accent} />
+      <Ring f={f} at={HOME_AT + 20} x={HOME_AVATAR.x} y={HOME_AVATAR.y} r0={50} r1={130} dur={28} color={C.highlight} width={4} />
     </AbsoluteFill>
   );
 };

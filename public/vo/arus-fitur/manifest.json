@@ -67,7 +67,7 @@
     "engine": "stand-in",
     "lead": 0.2,
     "tail": 0.5,
-    "seconds": 13.78,
+    "seconds": 15.004,
     "segments": [
       {
         "text": "Lalu kategori.",
@@ -85,19 +85,24 @@
         "end": 5.362
       },
       {
-        "text": "pilih warnanya.",
+        "text": "pilih ikonnya,",
         "start": 5.562,
-        "end": 6.696
+        "end": 6.678
+      },
+      {
+        "text": "dan warnanya.",
+        "start": 6.828,
+        "end": 7.915
       },
       {
         "text": "Kategori tidak pernah dihapus, hanya DIARSIPKAN,",
-        "start": 6.996,
-        "end": 10.769
+        "start": 8.215,
+        "end": 11.989
       },
       {
         "text": "jadi catatan lama tetap punya arti.",
-        "start": 11.069,
-        "end": 13.78
+        "start": 12.289,
+        "end": 15.004
       }
     ]
   },

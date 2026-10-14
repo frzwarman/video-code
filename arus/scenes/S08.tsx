@@ -2,7 +2,7 @@
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {type CameraKey, type Cue, back, fadeUp, lerp, prog, spin, swift} from '../../lib/core';
 import {cue} from '../voice';
-import {APP_W, Home} from '../../lib/Home';
+import {APP_W, HOME, Home} from '../../lib/Home';
 import {Phone, bezel} from '../../lib/Phone';
 import {Marker, Ring} from '../../lib/Fx';
 import {C, body, display, panel, pop} from '../../lib/palette';
@@ -17,7 +17,7 @@ const PEOPLE = [
 ];
 const xs = [60, 400, 740];
 const BZ = bezel(280, 600);
-const NUM_Y = 640 + BZ.inset + Math.round((173 + 30) * (BZ.screenW / APP_W)); // phone top + bezel + the balance line in the Home mock
+const NUM_Y = 640 + BZ.inset + Math.round((HOME.wallet.top + 63 + 30) * (BZ.screenW / APP_W)); // phone top + bezel + the balance line in the Home mock
 
 // In on the three numbers while they settle, out after the line.
 export const camera: CameraKey[] = [{at: COUNT.from, zoom: 1.12, x: 540, y: 904, dur: 36}, {at: LINK_AT + 40, zoom: 1, dur: 30}];

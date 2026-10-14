@@ -1,6 +1,7 @@
 // The app's UI, redrawn for page mock-ups at app pixels (394 wide): header, bottom sheet, fields, chips,
-// swatches, buttons, the Accounts card. Nothing animates on its own; callers pass progress values.
+// colours, the icon picker, buttons, the Accounts card. Nothing animates on its own; callers pass progress values.
 import type {CSSProperties, ReactNode} from 'react';
+import {ICON_GROUPS} from './categoryIcons';
 import {ACCOUNT, Lucide, Tile, type IconName} from './lucide';
 import {C, body, pop} from './palette';
 
@@ -93,21 +94,57 @@ export const Chips = ({options, value, lit}: {options: {label: string; icon?: Ic
   </div>
 );
 
-export const SWATCHES = ['#0d9488', '#0ea5e9', '#6366f1', '#8b5cf6', '#ec4899', '#ef4444', '#f59e0b', '#22c55e', '#64748b'];
-/** The colour row of the category form: the "no colour" sparkle tile, then the swatches, each tinting the icon. */
-export const Swatches = ({value, icon, lit}: {value: string | null; icon: IconName; lit?: Record<string, number>}) => (
-  <div style={{display: 'flex', flexWrap: 'wrap', gap: 8}}>
-    <span style={{position: 'relative', borderRadius: 16, boxShadow: value === null ? `0 0 0 2px ${C.accent}` : undefined}}>
-      <Tile icon="sparkles" tone="mint" size="md" />
-    </span>
-    {SWATCHES.map((hex) => {
-      const hot = lit?.[hex] ?? 0;
+/** The category form's colours (CategoriesPage.tsx): stored as hex, the first nine are the old palette. */
+export const COLOURS = ['#ef4444', '#f97316', '#f59e0b', '#22c55e', '#0d9488', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6', '#ec4899', '#a16207', '#64748b'];
+const glowRing = (hot: number) => (hot > 0 ? `, 0 0 0 ${2 + 4 * hot}px oklch(0.67 0.165 160 / ${(0.35 * hot).toFixed(3)})` : '');
+/** The colour row: "Automatic" (a sparkle), then plain dots; the pick is ringed and ticked. */
+export const Colours = ({value, lit}: {value: string | null; lit?: Record<string, number>}) => (
+  <div style={{display: 'flex', flexWrap: 'wrap', gap: 10}}>
+    {[null, ...COLOURS].map((hex) => {
+      const hot = lit?.[hex ?? 'auto'] ?? 0;
+      const ring = value === hex ? `0 0 0 2px ${C.raised}, 0 0 0 4px ${C.ink}` : '0 0 0 0 transparent';
       return (
-        <span key={hex} style={{display: 'grid', placeItems: 'center', width: 44, height: 44, borderRadius: 16, background: `color-mix(in oklab, ${hex} 16%, ${C.raised})`, boxShadow: value === hex ? `0 0 0 2px ${C.accent}` : hot > 0 ? `0 0 0 ${3 * hot}px oklch(0.67 0.165 160 / 0.35)` : undefined, transform: `scale(${1 + 0.08 * hot})`}}>
-          <Lucide name={icon} size={20} color={hex} />
+        <span key={hex ?? 'auto'} style={{display: 'grid', placeItems: 'center', width: 36, height: 36, borderRadius: '50%', background: hex ?? C.sunken, boxShadow: ring + glowRing(hot), transform: `scale(${1 + 0.1 * hot})`}}>
+          {hex === null ? <Lucide name="sparkles" size={16} color={C.inkSoft} /> : value === hex && <Lucide name="check" size={16} color="#fff" strokeWidth={3} />}
         </span>
       );
     })}
+  </div>
+);
+
+/** The icon picker: a bordered, scrolling box of grouped icons, 7 to a row; the pick is inverted. */
+export const ICON_BOX = {h: 224, pad: 6, label: 28, gap: 4, cols: 7, cell: (362 - 2 - 12 - 6 * 4) / 7};
+const rows = (n: number) => Math.ceil(n / ICON_BOX.cols);
+const groupH = (n: number) => ICON_BOX.label + rows(n) * ICON_BOX.cell + (rows(n) - 1) * ICON_BOX.gap;
+/** How far the box scrolls to centre `key`. */
+export const iconScroll = (key: string) => {
+  let y = ICON_BOX.pad;
+  for (const g of ICON_GROUPS) {
+    const i = g.icons.findIndex(([k]) => k === key);
+    if (i >= 0) return y + ICON_BOX.label + Math.floor(i / ICON_BOX.cols) * (ICON_BOX.cell + ICON_BOX.gap) + ICON_BOX.cell / 2 - ICON_BOX.h / 2;
+    y += groupH(g.icons.length);
+  }
+  return 0;
+};
+export const IconGrid = ({value, scroll = 0, lit = 0}: {value: string | null; scroll?: number; lit?: number}) => (
+  <div style={{position: 'relative', height: ICON_BOX.h, borderRadius: 16, border: `1px solid ${C.line}`, overflow: 'hidden'}}>
+    <div style={{padding: ICON_BOX.pad, transform: `translateY(${-scroll}px)`}}>
+      {ICON_GROUPS.map((g) => (
+        <div key={g.label}>
+          <div style={{height: ICON_BOX.label, boxSizing: 'border-box', padding: '8px 6px 4px', fontSize: 12, lineHeight: '16px', fontWeight: 600, color: C.inkFaint}}>{g.label}</div>
+          <div style={{display: 'grid', gridTemplateColumns: `repeat(${ICON_BOX.cols}, 1fr)`, gap: ICON_BOX.gap}}>
+            {g.icons.map(([key, Icon]) => {
+              const sel = key === value;
+              return (
+                <span key={key} style={{display: 'grid', placeItems: 'center', height: ICON_BOX.cell, borderRadius: 16, background: sel ? C.ink : 'transparent', boxShadow: sel && lit > 0 ? `0 0 0 ${2 + 4 * lit}px oklch(0.67 0.165 160 / ${(0.35 * lit).toFixed(3)})` : undefined, transform: `scale(${sel ? 1 + 0.12 * lit : 1})`}}>
+                  <Icon size={20} color={sel ? C.raised : C.inkSoft} />
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
   </div>
 );
 

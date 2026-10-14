@@ -12,15 +12,20 @@
     "render": "sh -c 'npx remotion render src/index.ts \"$0\" \"out/$0.mp4\"'"
   },
   "dependencies": {
+    "@react-three/fiber": "^9.8.1",
     "@remotion/cli": "^4.0.535",
     "@remotion/google-fonts": "^4.0.535",
     "@remotion/paths": "^4.0.535",
+    "@remotion/three": "4.0.535",
+    "lucide-react": "^1.47.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "remotion": "^4.0.535"
+    "remotion": "^4.0.535",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@types/react": "^19.3.0",
+    "@types/three": "^0.186.0",
     "typescript": "^7.0.2"
   }
 }

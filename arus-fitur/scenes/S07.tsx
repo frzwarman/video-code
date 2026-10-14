@@ -3,7 +3,8 @@ import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {type CameraKey, type Cue, back, fadeUp, prog, spin} from '../../lib/core';
 import {cue, voiceEnd} from '../voice';
 import {Marker, Ring} from '../../lib/Fx';
-import {Logo, WAVE} from '../../lib/Logo';
+import {WAVE} from '../../lib/Logo';
+import {Logo3D} from '../../lib/Logo3D';
 import {C, body, display} from '../../lib/palette';
 
 const WAVE_AT = 6;
@@ -25,8 +26,8 @@ export const Scene = () => {
       <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', inset: 0}}>
         <path d={WAVE} transform="translate(-260 -170) scale(50)" stroke={C.highlight} strokeWidth={0.3} strokeLinecap="round" fill="none" opacity={0.4} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - prog(f, WAVE_AT + 20, 56)} />
       </svg>
-      <div style={{position: 'absolute', top: 480, opacity: prog(f, 0, 12), transform: `scale(${0.6 + 0.4 * tile}) rotate(${spin(f, 0, 30, -120)}deg)`}}>
-        <Logo size={300} draw={prog(f, WAVE_AT, 36)} />
+      <div style={{position: 'absolute', top: 480, opacity: prog(f, 0, 12), transform: `scale(${0.6 + 0.4 * tile})`}}>
+        <Logo3D size={300} draw={prog(f, WAVE_AT, 36)} turn={spin(f, 0, 30, -120)} />
       </div>
       <div style={{position: 'absolute', top: 850, fontFamily: display, fontSize: 132, fontWeight: 800, letterSpacing: -3, color: C.onBand}}>
         {'Arus'.split('').map((ch, i) => (

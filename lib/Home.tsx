@@ -8,19 +8,21 @@ import {CATEGORY, Lucide, Tile, type IconName} from './lucide';
 import {C, body, pop, type Tone} from './palette';
 
 export const APP_W = 394;
+// The band is as tall as its right column (avatar over wave mark): 24 top + 124 + the 96 the wallet card rides up over.
 export const HOME = {
-  band: {top: 0, h: 206},
-  wallet: {top: 110, h: 290},
-  services: {top: 424, h: 84},
-  insights: {top: 532, h: 120},
-  recent: {top: 676, h: 288},
-  spend: {top: 988, h: 244},
-  budgets: {top: 1256, h: 224},
-  h: 1580,
-  // Camera anchors (app px): the In / Out tiles on the wallet card, the first activity row (a transfer).
-  inTile: {x: 112, y: 234},
-  outTile: {x: 274, y: 234},
-  transferRow: {x: 197, y: 750},
+  band: {top: 0, h: 244},
+  wallet: {top: 148, h: 290},
+  services: {top: 462, h: 84},
+  insights: {top: 570, h: 120},
+  recent: {top: 714, h: 288},
+  spend: {top: 1026, h: 244},
+  budgets: {top: 1294, h: 224},
+  h: 1618,
+  // Camera anchors (app px): the In / Out tiles on the wallet card, the first activity row (a transfer), your picture.
+  inTile: {x: 112, y: 272},
+  outTile: {x: 274, y: 272},
+  transferRow: {x: 197, y: 788},
+  avatar: {x: 318, y: 56},
 };
 
 const T = {xs: 12, sm: 14, title: 15, h1: 28, balance: 32};
@@ -127,13 +129,14 @@ const Insight = ({tone, title, text, icon, iconTone}: {tone: Tone; title: string
   </div>
 );
 
-export const Home = ({f, lit = {}, countFrom = 0}: {f: number; lit?: {in?: number; out?: number; transfer?: number}; countFrom?: number}) => {
+/** `avatar` is the uploaded picture, drawn inside the 64px circle; without one the circle shows Jane's initial. */
+export const Home = ({f, lit = {}, countFrom = 0, avatar}: {f: number; lit?: {in?: number; out?: number; transfer?: number}; countFrom?: number; avatar?: ReactNode}) => {
   // The app counts the balance up from 60% over 0.9 s the first time Home opens.
   const balance = roundK(interpolate(f, [countFrom, countFrom + 54], [947_000 * 0.6, 947_000], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.bezier(0.23, 1, 0.32, 1)}));
   const spendTotal = SPEND.reduce((a, s) => a + s[1], 0);
   return (
     <div style={{position: 'relative', width: APP_W, height: HOME.h, fontFamily: body, color: C.ink, background: C.surface}}>
-      {/* The jade band: greeting, workspace, month; the wave mark flows across it. */}
+      {/* The jade band: greeting, workspace, month; your picture and the wave mark on the right. */}
       <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: HOME.band.h, borderRadius: '0 0 32px 32px', overflow: 'hidden', background: `radial-gradient(24rem 14rem at 88% 0%, color-mix(in oklch, ${C.bandGlow} 45%, transparent), transparent 70%), linear-gradient(160deg, ${C.bandFrom}, ${C.bandTo})`}}>
         <svg viewBox="0 0 400 120" preserveAspectRatio="none" style={{position: 'absolute', left: 0, right: 0, bottom: 0, width: '100%', height: 112}}>
           <path d="M0 70c60-30 110 30 180 0s120-40 220 0v50H0Z" fill="white" opacity="0.07" />
@@ -148,7 +151,11 @@ export const Home = ({f, lit = {}, countFrom = 0}: {f: number; lit?: {in?: numbe
           Oktober 2026
           <Lucide name="chevronDown" size={14} color="#fff" strokeWidth={2.6} />
         </div>
-        <div style={{position: 'absolute', right: 16, top: 32}}>
+        {/* Your picture over the wave mark, a little narrower than it; it opens Settings. */}
+        <div style={{position: 'absolute', right: 20, top: 24, width: 112, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6}}>
+          <span style={{position: 'relative', display: 'grid', placeItems: 'center', width: 64, height: 64, borderRadius: '50%', overflow: 'hidden', background: C.accentSoft, color: C.accentInk, fontSize: 20, fontWeight: 800, boxShadow: '0 0 0 3px oklch(1 0 0 / 0.85)'}}>
+            J{avatar}
+          </span>
           <WaveMark f={f} width={112} />
         </div>
       </div>
