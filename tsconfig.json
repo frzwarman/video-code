@@ -13,6 +13,8 @@
     "src",
     "lib",
     "arus",
-    "arus-fitur"
+    "arus-fitur",
+    "arus-shortcut",
+    "arus-export"
   ]
 }

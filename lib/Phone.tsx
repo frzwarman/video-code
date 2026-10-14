@@ -55,3 +55,18 @@ export const Phone = ({
     </div>
   );
 };
+
+// The stage phone: one size and place shared by every phone scene, so relay cuts land on the same pixels.
+// Screens are drawn at app px (394 wide, Home.tsx's APP_W) and scaled into it.
+export const STAGE = {left: 240, top: 300, w: 600, h: 1300};
+const SBZ = bezel(STAGE.w, STAGE.h);
+export const STAGE_ZOOM = SBZ.screenW / 394;
+export const STAGE_SCREEN_H = SBZ.screenH / STAGE_ZOOM; // app px
+/** App px on the stage phone's screen → scene px. */
+export const onStage = (x: number, y: number) => ({x: STAGE.left + SBZ.inset + x * STAGE_ZOOM, y: STAGE.top + SBZ.inset + y * STAGE_ZOOM});
+/** The stage phone with its screen content laid out in app px. */
+export const StagePhone = ({screen, variant, style, children}: {screen: string; variant?: 'ios' | 'android'; style?: CSSProperties; children?: ReactNode}) => (
+  <Phone w={STAGE.w} h={STAGE.h} screen={screen} variant={variant} style={{left: STAGE.left, top: STAGE.top, borderRadius: 96, ...style}}>
+    <div style={{position: 'absolute', left: 0, top: 0, width: 394, height: STAGE_SCREEN_H, transformOrigin: 'top left', transform: `scale(${STAGE_ZOOM})`}}>{children}</div>
+  </Phone>
+);

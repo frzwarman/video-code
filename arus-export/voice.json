@@ -1,0 +1,18 @@
+{
+  "engine": {
+    "model": "gemini-3.8-flash-tts",
+    "voice": "Kore",
+    "style": "Warm, confident, clear narrator for an app walkthrough in Indonesian. Friendly and unhurried; crisp pronunciation; medium pace.",
+    "rpm": 3
+  },
+  "defaults": {"lead": 0.2, "tail": 0.35, "pause": 0.3},
+  "scenes": [
+    {"id": "S1", "segments": [{"text": "Satu bulan pengeluaran.", "pause": 0.35}, {"text": "Satu KETUKAN.", "pause": 0.45}, "Begini caranya."], "lead": 2.6, "tail": 0.5},
+    {"id": "S2", "segments": [{"text": "Buka Laporan.", "pause": 0.25}, {"text": "Pilih rentangnya:", "pause": 0.2}, {"text": "bulan ini,", "pause": 0.15}, {"text": "tiga bulan,", "pause": 0.15}, {"text": "setahun,", "pause": 0.15}, "atau tanggal sendiri.", {"text": "Ketuk Export,", "pause": 0.2}, {"text": "lalu pilih:", "pause": 0.2}, {"text": "CSV,", "pause": 0.2}, "atau EXCEL."], "tail": 0.5},
+    {"id": "S3", "segments": [{"text": "SEMUA transaksi di rentang itu ikut,", "pause": 0.2}, "bukan cuma yang terlihat di layar."], "tail": 0.6},
+    {"id": "S4", "segments": [{"text": "File Excel-nya langsung RAPI:", "pause": 0.25}, {"text": "judul kolom tebal dan terkunci,", "pause": 0.2}, {"text": "tombol filter sudah siap,", "pause": 0.2}, "tanggal dan nominal sudah berformat.", "Tinggal urutkan, saring, dan jumlahkan."], "tail": 0.6},
+    {"id": "S5", "segments": [{"text": "Butuh yang lebih universal?", "pause": 0.3}, "CSV bisa dibuka di aplikasi spreadsheet APA PUN,", "dengan kolom yang sama."], "tail": 0.5},
+    {"id": "S6", "segments": ["Dan catatan yang diawali tanda sama dengan", "TIDAK akan pernah dijalankan sebagai rumus."], "tail": 0.6},
+    {"id": "S7", "segments": [{"text": "Arus.", "pause": 0.4}, "Lihat ke mana uangmu MENGALIR."], "lead": 0.6, "tail": 1.5}
+  ]
+}

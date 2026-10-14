@@ -1,0 +1,200 @@
+{
+  "S1": {
+    "file": "vo/arus-export/S1.wav",
+    "engine": "stand-in",
+    "lead": 2.6,
+    "tail": 0.5,
+    "seconds": 5.042,
+    "segments": [
+      {
+        "text": "Satu bulan pengeluaran.",
+        "start": 0,
+        "end": 1.763
+      },
+      {
+        "text": "Satu KETUKAN.",
+        "start": 2.113,
+        "end": 3.41
+      },
+      {
+        "text": "Begini caranya.",
+        "start": 3.86,
+        "end": 5.042
+      }
+    ]
+  },
+  "S2": {
+    "file": "vo/arus-export/S2.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.5,
+    "seconds": 12.476,
+    "segments": [
+      {
+        "text": "Buka Laporan.",
+        "start": 0,
+        "end": 1.101
+      },
+      {
+        "text": "Pilih rentangnya:",
+        "start": 1.351,
+        "end": 2.532
+      },
+      {
+        "text": "bulan ini,",
+        "start": 2.732,
+        "end": 3.695
+      },
+      {
+        "text": "tiga bulan,",
+        "start": 3.845,
+        "end": 4.814
+      },
+      {
+        "text": "setahun,",
+        "start": 4.964,
+        "end": 5.847
+      },
+      {
+        "text": "atau tanggal sendiri.",
+        "start": 5.997,
+        "end": 7.602
+      },
+      {
+        "text": "Ketuk Export,",
+        "start": 7.902,
+        "end": 9.056
+      },
+      {
+        "text": "lalu pilih:",
+        "start": 9.256,
+        "end": 10.157
+      },
+      {
+        "text": "CSV,",
+        "start": 10.357,
+        "end": 11.297
+      },
+      {
+        "text": "atau EXCEL.",
+        "start": 11.497,
+        "end": 12.476
+      }
+    ]
+  },
+  "S3": {
+    "file": "vo/arus-export/S3.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.6,
+    "seconds": 5.15,
+    "segments": [
+      {
+        "text": "SEMUA transaksi di rentang itu ikut,",
+        "start": 0,
+        "end": 2.679
+      },
+      {
+        "text": "bukan cuma yang terlihat di layar.",
+        "start": 2.879,
+        "end": 5.15
+      }
+    ]
+  },
+  "S4": {
+    "file": "vo/arus-export/S4.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.6,
+    "seconds": 12.837,
+    "segments": [
+      {
+        "text": "File Excel-nya langsung RAPI:",
+        "start": 0,
+        "end": 2.233
+      },
+      {
+        "text": "judul kolom tebal dan terkunci,",
+        "start": 2.483,
+        "end": 4.786
+      },
+      {
+        "text": "tombol filter sudah siap,",
+        "start": 4.986,
+        "end": 6.804
+      },
+      {
+        "text": "tanggal dan nominal sudah berformat.",
+        "start": 7.004,
+        "end": 9.363
+      },
+      {
+        "text": "Tinggal urutkan, saring, dan jumlahkan.",
+        "start": 9.663,
+        "end": 12.837
+      }
+    ]
+  },
+  "S5": {
+    "file": "vo/arus-export/S5.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.5,
+    "seconds": 8.106,
+    "segments": [
+      {
+        "text": "Butuh yang lebih universal?",
+        "start": 0,
+        "end": 1.973
+      },
+      {
+        "text": "CSV bisa dibuka di aplikasi spreadsheet APA PUN,",
+        "start": 2.273,
+        "end": 6.286
+      },
+      {
+        "text": "dengan kolom yang sama.",
+        "start": 6.586,
+        "end": 8.106
+      }
+    ]
+  },
+  "S6": {
+    "file": "vo/arus-export/S6.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.6,
+    "seconds": 6.385,
+    "segments": [
+      {
+        "text": "Dan catatan yang diawali tanda sama dengan",
+        "start": 0,
+        "end": 3.128
+      },
+      {
+        "text": "TIDAK akan pernah dijalankan sebagai rumus.",
+        "start": 3.428,
+        "end": 6.385
+      }
+    ]
+  },
+  "S7": {
+    "file": "vo/arus-export/S7.wav",
+    "engine": "stand-in",
+    "lead": 0.6,
+    "tail": 1.5,
+    "seconds": 3.015,
+    "segments": [
+      {
+        "text": "Arus.",
+        "start": 0,
+        "end": 0.574
+      },
+      {
+        "text": "Lihat ke mana uangmu MENGALIR.",
+        "start": 0.974,
+        "end": 3.015
+      }
+    ]
+  }
+}

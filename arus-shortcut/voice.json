@@ -5,16 +5,151 @@
     "style": "Warm, confident, clear narrator for an app walkthrough in Indonesian. Friendly and unhurried; crisp pronunciation; medium pace.",
     "rpm": 3
   },
-  "defaults": {"lead": 0.2, "tail": 0.35, "pause": 0.3},
+  "defaults": {
+    "lead": 0.2,
+    "tail": 0.35,
+    "pause": 0.3
+  },
   "scenes": [
-    {"id": "S1", "segments": [{"text": "Ketuk, ketuk.", "pause": 0.35}, {"text": "TERCATAT.", "pause": 0.5}, "Begini cara pasangnya."], "lead": 2.6, "tail": 0.5},
-    {"id": "S2", "segments": ["Shortcut ini membaca teks dari tangkapan layar struk,", {"text": "LANGSUNG di iPhone-mu.", "pause": 0.4}, {"text": "Gambarnya tidak pernah dikirim,", "pause": 0.2}, "dan Arus tidak pernah terhubung ke bank."], "tail": 0.5},
-    {"id": "S3", "segments": [{"text": "Pertama, buka Pengaturan,", "pause": 0.2}, "lalu iPhone quick add.", {"text": "Pilih Akun apa saja, biar Arus yang menentukan,", "pause": 0.2}, "lalu Buat token.", {"text": "Kamu dapat tiga nilai:", "pause": 0.25}, {"text": "URL,", "pause": 0.2}, {"text": "apikey,", "pause": 0.2}, "dan token.", "Token hanya tampil SEKALI, jadi langsung salin."], "tail": 0.5},
-    {"id": "S4", "segments": ["Buka aplikasi Pintasan.", {"text": "Tambahkan:", "pause": 0.25}, {"text": "Ambil Tangkapan Layar,", "pause": 0.2}, {"text": "Ekstrak Teks dari Gambar,", "pause": 0.2}, "lalu Dapatkan Isi URL,", "dengan URL, apikey, dan token tadi."], "tail": 0.5},
-    {"id": "S5", "segments": [{"text": "Kalau Arus BERTANYA,", "pause": 0.2}, "tampilkan daftar akun atau kategorinya,", "lalu kirim ulang pilihanmu.", "Terakhir, Tampilkan Notifikasi."], "tail": 0.5},
-    {"id": "S6", "segments": [{"text": "Lalu di Pengaturan iPhone:", "pause": 0.25}, {"text": "Aksesibilitas,", "pause": 0.2}, {"text": "Sentuh,", "pause": 0.2}, "Ketuk Belakang.", {"text": "Pilih Ketuk Dua Kali,", "pause": 0.2}, "dan pasang Shortcut-mu."], "tail": 0.5},
-    {"id": "S7", "segments": ["Sekarang coba.", "Buka struk transfer, ketuk dua kali.", {"text": "Struk pertama?", "pause": 0.35}, {"text": "Arus bertanya SEKALI:", "pause": 0.25}, {"text": "akun yang mana,", "pause": 0.2}, "kategori apa."], "tail": 0.6},
-    {"id": "S8", "segments": ["Berikutnya, struk dari layar yang sama LANGSUNG tercatat, tanpa ditanya.", {"text": "Kirim struk yang sama dua kali?", "pause": 0.35}, "Tetap tercatat SEKALI."], "tail": 0.6},
-    {"id": "S9", "segments": [{"text": "Arus.", "pause": 0.4}, "Lihat ke mana uangmu MENGALIR."], "lead": 0.6, "tail": 1.5}
+    {
+      "id": "S1",
+      "segments": [
+        {
+          "text": "Ketuk, ketuk.",
+          "pause": 0.35
+        },
+        {
+          "text": "TERCATAT.",
+          "pause": 0.5
+        },
+        "Begini cara pasangnya."
+      ],
+      "lead": 2.6,
+      "tail": 0.5
+    },
+    {
+      "id": "S2",
+      "segments": [
+        "Shortcut ini membaca teks dari tangkapan layar struk,",
+        {
+          "text": "LANGSUNG di iPhone-mu.",
+          "pause": 0.4
+        },
+        {
+          "text": "Gambarnya tidak pernah dikirim,",
+          "pause": 0.2
+        },
+        "dan Arus tidak pernah terhubung ke bank."
+      ],
+      "tail": 0.5
+    },
+    {
+      "id": "S3",
+      "segments": [
+        {
+          "text": "Pertama, buka Pengaturan,",
+          "pause": 0.2
+        },
+        "lalu iPhone quick add.",
+        {
+          "text": "Pilih Akun apa saja, biar Arus yang menentukan,",
+          "pause": 0.2
+        },
+        {
+          "text": "lalu Buat token.",
+          "pause": 0.3
+        },
+        {
+          "text": "Token hanya tampil SEKALI,",
+          "pause": 0.2
+        },
+        "jadi langsung SALIN."
+      ],
+      "tail": 0.5
+    },
+    {
+      "id": "S4",
+      "segments": [
+        {
+          "text": "Lalu ketuk Get the Shortcut,",
+          "pause": 0.25
+        },
+        {
+          "text": "tambahkan ke iPhone-mu,",
+          "pause": 0.2
+        },
+        "dan tempel token-mu saat diminta."
+      ],
+      "tail": 0.5
+    },
+    {
+      "id": "S5",
+      "segments": [
+        {
+          "text": "Lalu di Pengaturan iPhone:",
+          "pause": 0.25
+        },
+        {
+          "text": "Aksesibilitas,",
+          "pause": 0.2
+        },
+        {
+          "text": "Sentuh,",
+          "pause": 0.2
+        },
+        "Ketuk Belakang.",
+        {
+          "text": "Pilih Ketuk Dua Kali,",
+          "pause": 0.2
+        },
+        "dan pasang Shortcut-mu."
+      ],
+      "tail": 0.5
+    },
+    {
+      "id": "S6",
+      "segments": [
+        "Sekarang coba.",
+        "Buka struk transfer, ketuk dua kali.",
+        {
+          "text": "Struk pertama?",
+          "pause": 0.35
+        },
+        {
+          "text": "Arus bertanya SEKALI:",
+          "pause": 0.25
+        },
+        {
+          "text": "akun yang mana,",
+          "pause": 0.2
+        },
+        "kategori apa."
+      ],
+      "tail": 0.6
+    },
+    {
+      "id": "S7",
+      "segments": [
+        "Berikutnya, struk dari layar yang sama LANGSUNG tercatat, tanpa ditanya.",
+        {
+          "text": "Kirim struk yang sama dua kali?",
+          "pause": 0.35
+        },
+        "Tetap tercatat SEKALI."
+      ],
+      "tail": 0.6
+    },
+    {
+      "id": "S8",
+      "segments": [
+        {
+          "text": "Arus.",
+          "pause": 0.4
+        },
+        "Lihat ke mana uangmu MENGALIR."
+      ],
+      "lead": 0.6,
+      "tail": 1.5
+    }
   ]
 }
