@@ -1,8 +1,9 @@
 // Video 2 (arus-fitur): scene timeline from TREATMENT.md. Every frame is a function of the frame number.
 import type {ComponentType, ReactNode} from 'react';
-import {AbsoluteFill, Audio, Sequence, interpolate, staticFile, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame} from 'remotion';
 import {Backdrop} from '../lib/Backdrop';
-import {type CameraKey, type Cue, cameraAt, lerp, prog, sec} from '../lib/core';
+import {type CameraKey, type Cue, lerp, prog, sec} from '../lib/core';
+import {E, type Enter, EnterContext, lmix, shotAt} from '../lib/motion';
 import {VOICE} from './voice';
 import {WAVE} from '../lib/Logo';
 import {C} from '../lib/palette';
@@ -14,16 +15,19 @@ import * as S05 from './scenes/S05';
 import * as S06 from './scenes/S06';
 import * as S07 from './scenes/S07';
 
-type Scene = {id: string; title: string; mod: {Scene: ComponentType; sfx: Cue[]; camera?: CameraKey[]}};
+type Scene = {id: string; title: string; enter: Enter; mod: {Scene: ComponentType; sfx: Cue[]; camera?: CameraKey[]}};
 
+// How each scene begins. 'through': a scale-through cut (the outgoing shot rushes in, the new one lands from
+// 1.7×), used where the picture really changes, with the wave sweep. 'relay': the phone stays put and only its
+// screen changes, the camera carrying on from where the last scene left it: one continuous take.
 const SCENES: Scene[] = [
-  {id: 'S1', title: 'Hook', mod: S01},
-  {id: 'S2', title: 'Akun', mod: S02},
-  {id: 'S3', title: 'Kategori', mod: S03},
-  {id: 'S4', title: 'Anggaran', mod: S04},
-  {id: 'S5', title: 'Workspace', mod: S05},
-  {id: 'S6', title: 'Foto profil', mod: S06},
-  {id: 'S7', title: 'Logo + CTA', mod: S07},
+  {id: 'S1', title: 'Hook', enter: 'first', mod: S01},
+  {id: 'S2', title: 'Akun', enter: 'through', mod: S02},
+  {id: 'S3', title: 'Kategori', enter: 'relay', mod: S03},
+  {id: 'S4', title: 'Anggaran', enter: 'through', mod: S04},
+  {id: 'S5', title: 'Workspace', enter: 'relay', mod: S05},
+  {id: 'S6', title: 'Foto profil', enter: 'relay', mod: S06},
+  {id: 'S7', title: 'Logo + CTA', enter: 'through', mod: S07},
 ];
 
 // Each scene lasts lead + its voice clip + tail (public/vo/manifest.json, written by `npm run tts`).
@@ -38,27 +42,18 @@ export const DURATION = TIMED[TIMED.length - 1].from + TIMED[TIMED.length - 1].d
 // Voice is normalised to −14 LUFS by `npm run tts`; effects sit well under it so the voice leads.
 const SFX_GAIN = 0.25;
 
-// Every scene: a slow push-in across its whole length, a soft enter and a quicker exit at the cuts,
-// and inside that the scene's own camera: zooms into what the voice is talking about, and back out.
-const ENTER = 10;
-const EXIT = 8;
-const SceneShell = ({dur, last, camera, children}: {dur: number; last: boolean; camera?: CameraKey[]; children: ReactNode}) => {
+// No fades and no blur at the cuts. A 'through' cut: the last 18 f rush in (×1.3, fastest on the cut frame) and
+// the next scene lands from 1.7× over 36 f. A 'relay': the camera eases from the last scene's final shot into
+// this scene's own over 40 f. Holds creep on their own (lib/motion.tsx), so there is no extra push-in.
+const SceneShell = ({dur, enter, leave, camera, from, children}: {dur: number; enter: Enter; leave?: Enter; camera?: CameraKey[]; from?: ReturnType<typeof shotAt>; children: ReactNode}) => {
   const f = useCurrentFrame();
-  const enter = prog(f, 0, ENTER);
-  const exit = last ? 0 : prog(f, dur - EXIT, EXIT);
-  const push = interpolate(f, [0, dur], [1, 1.035]);
-  const blur = (1 - enter) * 10 + exit * 6;
-  const cam = cameraAt(camera, f);
+  const own = shotAt(camera, f);
+  const cam = enter === 'relay' && from ? lmix(from, own, prog(f, 0, 40, E.cam)) : own;
+  const k = (enter === 'through' ? lerp(1.7, 1, prog(f, 0, 36, E.out)) : 1) * (leave === 'through' ? lerp(1, 1.3, prog(f, dur - 18, 18, E.exit)) : 1);
   return (
-    <AbsoluteFill
-      style={{
-        opacity: enter * (1 - 0.75 * exit),
-        transform: `scale(${push * lerp(1.06, 1, enter) * lerp(1, 0.97, exit)})`,
-        filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
-      }}
-    >
-      <AbsoluteFill style={{transformOrigin: `${cam.x}px ${cam.y}px`, transform: `scale(${cam.zoom})`}}>{children}</AbsoluteFill>
-    </AbsoluteFill>
+    <EnterContext.Provider value={enter}>
+      <AbsoluteFill style={{transformOrigin: `${cam.x}px ${cam.y}px`, transform: `scale(${cam.zoom * k})`}}>{children}</AbsoluteFill>
+    </EnterContext.Provider>
   );
 };
 
@@ -90,9 +85,9 @@ const WaveSweep = () => {
 export const Film = () => (
   <AbsoluteFill>
     <Backdrop cuts={TIMED.slice(1).map((s) => s.from)} sweep={SWEEP} />
-    {TIMED.map(({id, title, from, dur, mod}, i) => (
+    {TIMED.map(({id, title, from, dur, enter, mod}, i) => (
       <Sequence key={id} name={`${id} · ${title}`} from={from} durationInFrames={dur}>
-        <SceneShell dur={dur} last={i === TIMED.length - 1} camera={mod.camera}>
+        <SceneShell dur={dur} enter={enter} leave={TIMED[i + 1]?.enter} camera={mod.camera} from={i > 0 ? shotAt(TIMED[i - 1].mod.camera, TIMED[i - 1].dur - 1) : undefined}>
           <mod.Scene />
         </SceneShell>
         <Sequence from={sec(VOICE[id].lead)} layout="none" name="voice">
@@ -105,7 +100,7 @@ export const Film = () => (
         ))}
       </Sequence>
     ))}
-    {TIMED.slice(1).map(({id, from}) => (
+    {TIMED.filter((s) => s.enter === 'through').map(({id, from}) => (
       <Sequence key={`sweep-${id}`} name={`→ ${id}`} from={from - Math.round(SWEEP / 2)} durationInFrames={SWEEP}>
         <WaveSweep />
       </Sequence>

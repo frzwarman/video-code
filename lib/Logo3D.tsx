@@ -1,14 +1,13 @@
 import {useMemo} from 'react';
 import {getLength} from '@remotion/paths';
 import {ThreeCanvas} from '@remotion/three';
-import {useCurrentFrame} from 'remotion';
 import {CanvasTexture, ExtrudeGeometry, Shape, SRGBColorSpace} from 'three';
 import {WAVE} from './Logo';
 import {C} from './palette';
 
 // The Logo tile as a solid: same gradient face and wave, with depth and a bevel the light catches.
 // Drop-in for <Logo>: takes the same size x size box; the canvas overflows it so a turn never clips.
-// `turn` spins it around the vertical axis (degrees), on top of a slow idle sway.
+// `turn` spins it around the vertical axis (degrees); at rest it sits turned a little, so the depth shows.
 const TEX = 512;
 const WAVE_LEN = getLength(WAVE);
 const R = 9 / 32; // the favicon's corner radius
@@ -31,7 +30,6 @@ const tileGeometry = () => {
 };
 
 const Tile = ({draw, turn}: {draw: number; turn: number}) => {
-  const f = useCurrentFrame();
   const geometry = useMemo(tileGeometry, []);
   const [ctx, map] = useMemo(() => {
     const canvas = document.createElement('canvas');
@@ -62,7 +60,7 @@ const Tile = ({draw, turn}: {draw: number; turn: number}) => {
   map.needsUpdate = true;
 
   return (
-    <mesh geometry={geometry} rotation={[0.16 + 0.05 * Math.sin(f / 37), (turn * Math.PI) / 180 + 0.22 * Math.sin(f / 50), 0]}>
+    <mesh geometry={geometry} rotation={[0.16, (turn * Math.PI) / 180 - 0.18, 0]}>
       {/* Groups from ExtrudeGeometry: 0 = the two faces, 1 = the sides and bevel. */}
       {/* A little self-light keeps the face on the favicon's colours; the lights add the shading. */}
       <meshStandardMaterial attach="material-0" map={map} emissiveMap={map} emissive="#fff" emissiveIntensity={0.3} roughness={0.35} />

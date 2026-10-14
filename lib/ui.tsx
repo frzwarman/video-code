@@ -9,6 +9,11 @@ export const PANEL: CSSProperties = {background: C.raised, border: `1px solid ${
 
 /** Text typed in over time: `cps` characters per second from frame `at`. */
 export const typed = (text: string, f: number, at: number, cps = 14) => text.slice(0, Math.max(0, Math.min(text.length, Math.floor(((f - at) * cps) / 60))));
+/** How strongly the newest typed character still shows the accent (1 as it lands, 0 after 12 f). */
+export const newest = (text: string, f: number, at: number, cps = 14) => {
+  const n = typed(text, f, at, cps).length;
+  return n === 0 ? 0 : 1 - Math.min(1, Math.max(0, f - (at + Math.ceil(((n - 1) * 60) / cps))) / 12);
+};
 /** A caret that blinks on the half second. */
 export const caretOn = (f: number) => Math.floor(f / 30) % 2 === 0;
 
@@ -64,10 +69,17 @@ export const Field = ({label, required, children}: {label: string; required?: bo
   </div>
 );
 
-export const Input = ({value, placeholder, focus = 0, caret = false, icon, prefix}: {value: string; placeholder?: string; focus?: number; caret?: boolean; icon?: IconName; prefix?: string}) => (
+export const Input = ({value, placeholder, focus = 0, caret = false, icon, prefix, fresh = 0}: {value: string; placeholder?: string; focus?: number; caret?: boolean; icon?: IconName; prefix?: string; fresh?: number}) => (
   <div style={{position: 'relative', display: 'flex', alignItems: 'center', gap: 6, height: 44, padding: '0 12px', borderRadius: 14, background: C.raised, border: `1px solid ${C.lineStrong}`, fontSize: 16, color: value ? C.ink : C.inkFaint, boxSizing: 'border-box', fontVariantNumeric: 'tabular-nums'}}>
     {prefix && <span style={{color: C.inkSoft}}>{prefix}</span>}
-    {value || placeholder}
+    {value ? (
+      <span>
+        {value.slice(0, -1)}
+        <span style={{color: fresh > 0.01 ? `color-mix(in oklch, ${C.accentStrong} ${(fresh * 100).toFixed(1)}%, ${C.ink})` : undefined}}>{value.slice(-1)}</span>
+      </span>
+    ) : (
+      placeholder
+    )}
     {caret && <span style={{width: 2, height: 20, background: C.accentStrong}} />}
     {icon && (
       <span style={{marginLeft: 'auto'}}>
@@ -85,7 +97,7 @@ export const Chips = ({options, value, lit}: {options: {label: string; icon?: Ic
       const sel = o.label === value;
       const hot = lit?.[o.label] ?? 0;
       return (
-        <div key={o.label} style={{display: 'inline-flex', alignItems: 'center', gap: 6, height: 36, padding: '0 14px', borderRadius: 999, fontSize: 14, fontWeight: 700, boxSizing: 'border-box', background: sel ? C.accentSoft : C.raised, color: sel ? C.accentInk : C.ink, border: `1px solid ${sel ? C.accent : C.lineStrong}`, transform: `scale(${1 + 0.06 * hot})`, boxShadow: hot > 0 ? `0 0 0 ${3 * hot}px oklch(0.67 0.165 160 / 0.35)` : undefined}}>
+        <div key={o.label} style={{display: 'inline-flex', alignItems: 'center', gap: 6, height: 36, padding: '0 14px', borderRadius: 999, fontSize: 14, fontWeight: 700, boxSizing: 'border-box', background: sel ? C.accentSoft : C.raised, color: sel ? C.accentInk : C.ink, border: `1px solid ${sel ? C.accent : C.lineStrong}`, transform: `scale(${1 + 0.04 * hot})`, outline: hot > 0.02 ? `2px solid oklch(0.67 0.165 160 / ${hot.toFixed(3)})` : undefined, outlineOffset: 3}}>
           {o.icon && <Lucide name={o.icon} size={16} color="currentColor" strokeWidth={2.4} />}
           {o.label}
         </div>
@@ -96,7 +108,7 @@ export const Chips = ({options, value, lit}: {options: {label: string; icon?: Ic
 
 /** The category form's colours (CategoriesPage.tsx): stored as hex, the first nine are the old palette. */
 export const COLOURS = ['#ef4444', '#f97316', '#f59e0b', '#22c55e', '#0d9488', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6', '#ec4899', '#a16207', '#64748b'];
-const glowRing = (hot: number) => (hot > 0 ? `, 0 0 0 ${2 + 4 * hot}px oklch(0.67 0.165 160 / ${(0.35 * hot).toFixed(3)})` : '');
+const glowRing = (hot: number) => (hot > 0.02 ? `, 0 0 0 7px oklch(0.67 0.165 160 / ${hot.toFixed(3)})` : '');
 /** The colour row: "Automatic" (a sparkle), then plain dots; the pick is ringed and ticked. */
 export const Colours = ({value, lit}: {value: string | null; lit?: Record<string, number>}) => (
   <div style={{display: 'flex', flexWrap: 'wrap', gap: 10}}>
@@ -136,7 +148,7 @@ export const IconGrid = ({value, scroll = 0, lit = 0}: {value: string | null; sc
             {g.icons.map(([key, Icon]) => {
               const sel = key === value;
               return (
-                <span key={key} style={{display: 'grid', placeItems: 'center', height: ICON_BOX.cell, borderRadius: 16, background: sel ? C.ink : 'transparent', boxShadow: sel && lit > 0 ? `0 0 0 ${2 + 4 * lit}px oklch(0.67 0.165 160 / ${(0.35 * lit).toFixed(3)})` : undefined, transform: `scale(${sel ? 1 + 0.12 * lit : 1})`}}>
+                <span key={key} style={{display: 'grid', placeItems: 'center', height: ICON_BOX.cell, borderRadius: 16, background: sel ? C.ink : 'transparent', outline: sel && lit > 0.02 ? `2px solid oklch(0.67 0.165 160 / ${lit.toFixed(3)})` : undefined, outlineOffset: 3, transform: `scale(${sel ? 1 + 0.06 * lit : 1})`}}>
                   <Icon size={20} color={sel ? C.raised : C.inkSoft} />
                 </span>
               );

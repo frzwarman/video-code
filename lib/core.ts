@@ -59,7 +59,7 @@ export const makeCues = (manifest: Record<string, Voice>) => ({
 });
 
 /** A camera move: from frame `at`, over `dur` frames, settle at `zoom` looking at (x, y) in scene pixels. */
-export type CameraKey = {at: number; zoom: number; x?: number; y?: number; dur?: number};
+export type CameraKey = {at: number; zoom: number; x?: number; y?: number; dur?: number; cut?: boolean};
 
 /** Where the camera is at frame f: keys hold until the next one starts; moves ease in and out. */
 export const cameraAt = (keys: CameraKey[] | undefined, f: number) => {

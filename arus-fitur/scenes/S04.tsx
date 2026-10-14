@@ -1,13 +1,14 @@
 // S4 — Anggaran: the Budgets page. A monthly limit for Makan is set in the sheet, its card lands and fills as
 // the month's spending comes in; next month starts empty until "Copy last month" brings the budgets back.
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, back, fadeUp, inOut, lerp, prog, roundK, rupiah} from '../../lib/core';
-import {Marker, Ring, YELLOW_MARK} from '../../lib/Fx';
+import {type CameraKey, type Cue, lerp, prog, roundK, rupiah} from '../../lib/core';
+import {Marker, YELLOW_MARK} from '../../lib/Fx';
+import {E, Tap, hitPulse, pressScale, punch, usePhoneIn} from '../../lib/motion';
 import {APP_W, TabBar} from '../../lib/Home';
 import {CATEGORY, Lucide, Tile, type IconName} from '../../lib/lucide';
 import {C, body} from '../../lib/palette';
 import {Phone, bezel} from '../../lib/Phone';
-import {Button, Field, Input, PANEL, PageHeader, Sheet, caretOn, typed} from '../../lib/ui';
+import {Button, Field, Input, PANEL, PageHeader, Sheet, caretOn, newest, typed} from '../../lib/ui';
 import {cue} from '../voice';
 
 // VO: "Setiap kategori bisa punya batas bulanan." | "Isi nominalnya," | "dan Arus menghitung SISANYA sepanjang bulan."
@@ -36,7 +37,6 @@ const SET_BTN = toScene(255, 152);
 const COPY_BTN = toScene(96, 152);
 const NEXT_BTN = toScene(286, 200);
 const SAVE_BTN = toScene(254, SCREEN_H - 52);
-const glow = (f: number, at: number) => (f >= at ? Math.exp(-(f - at) / 12) : 0);
 
 type Row = {name: string; limit: number; spent: number};
 const stateOf = (r: Row) => (r.spent > r.limit ? 'over' : r.spent >= r.limit * 0.8 ? 'close' : 'ok');
@@ -54,10 +54,12 @@ const MAKAN = {name: 'Makan', limit: 2_000_000};
 
 export const camera: CameraKey[] = [
   {at: 0, zoom: 1.2, x: 540, y: 620, dur: 1},
-  {at: SHEET_UP + 6, zoom: 1.45, x: 540, y: 1200, dur: 30},
-  {at: SHEET_DOWN, zoom: 1.3, x: 540, y: 900, dur: 30},
-  {at: NOV_AT - 12, zoom: 1.35, x: 540, y: 640, dur: 30},
-  {at: COPIED_AT + 10, zoom: 1.2, x: 540, y: 820, dur: 36},
+  {at: SHEET_UP + 6, zoom: 1.45, x: 540, y: 1200},
+  {at: SHEET_DOWN, zoom: 1.3, x: 540, y: 900},
+  {at: NOV_AT - 12, zoom: 1.35, x: 540, y: 640},
+  // "SALIN": hard cut in on Copy last month as it is pressed, back out as the budgets fly back.
+  ...punch(TAP_COPY - 4, COPY_BTN.x, COPY_BTN.y, {zoom: 1.35, x: 540, y: 640}, 2.4, 22),
+  {at: COPIED_AT + 10, zoom: 1.2, x: 540, y: 820},
 ];
 
 export const sfx: Cue[] = [
@@ -162,15 +164,15 @@ const Summary = ({rows}: {rows: Row[]}) => {
 
 export const Scene = () => {
   const f = useCurrentFrame();
-  const phoneIn = prog(f, 0, 26);
-  const up = prog(f, SHEET_UP, 22) * (1 - prog(f, SHEET_DOWN, 16));
+  const phoneIn = usePhoneIn();
+  const up = prog(f, SHEET_UP, 44, E.glide) * (1 - prog(f, SHEET_DOWN, 24, E.exit));
   const limit = typed('2.000.000', f, LIMIT_AT, 14);
   const typing = f >= LIMIT_AT && f < LIMIT_AT + 50;
-  const cardIn = prog(f, CARD_AT, 24, back);
-  const makanSpent = roundK(lerp(0, 1_420_000, prog(f, FILL_AT, FILL_DUR, inOut)));
+  const cardIn = prog(f, CARD_AT, 26, E.out);
+  const makanSpent = roundK(lerp(0, 1_420_000, prog(f, FILL_AT, FILL_DUR, E.glide)));
   const november = f >= NOV_AT + 3;
   const monthIn = prog(f, NOV_AT + 3, 14);
-  const out = prog(f, FLIP_AT, 14); // October's cards leave…
+  const out = prog(f, FLIP_AT, 16, E.exit); // October's cards leave, accelerating…
   const copied = f >= COPIED_AT; // …and come back for November, untouched
   const rows: Row[] = copied
     ? [{...MAKAN, spent: 0}, ...OCT.map((r) => ({...r, spent: 0}))]
@@ -178,21 +180,21 @@ export const Scene = () => {
   const list = copied || f < FLIP_AT + 14;
   const empty = !copied && f >= FLIP_AT + 14;
   const emptyIn = prog(f, FLIP_AT + 14, 20);
-  const copyGlow = glow(f, TAP_COPY);
-  const toast = prog(f, TOAST_AT, 18, back);
+  const copyGlow = hitPulse(f, TAP_COPY);
+  const toast = prog(f, TOAST_AT, 22, E.out);
 
   return (
     <AbsoluteFill>
-      <Phone w={PHONE.w} h={PHONE.h} screen={C.surface} variant="android" style={{left: PHONE.left, top: PHONE.top, borderRadius: 96, ...fadeUp(phoneIn, 90)}}>
+      <Phone w={PHONE.w} h={PHONE.h} screen={C.surface} variant="android" style={{left: PHONE.left, top: PHONE.top, borderRadius: 96, ...phoneIn}}>
         <div style={{position: 'absolute', left: 0, top: 0, width: APP_W, height: SCREEN_H, transformOrigin: 'top left', transform: `scale(${ZOOM})`, fontFamily: body, color: C.ink}}>
           <div style={{padding: '48px 16px 16px', display: 'grid', gap: 16}}>
             <div>
               <PageHeader title="Budgets" subtitle={`${november ? 'November' : 'Oktober'} 2026. Transfers between your own accounts never count as spending.`} />
               <div style={{display: 'flex', gap: 8, marginTop: 12}}>
-                <Button variant="secondary" size="sm" icon="copy" style={{boxShadow: copyGlow > 0 ? `0 0 0 ${4 * copyGlow}px oklch(0.67 0.165 160 / 0.35)` : undefined, transform: `scale(${1 + 0.05 * copyGlow})`}}>
+                <Button variant="secondary" size="sm" icon="copy" style={{outline: copyGlow > 0.02 ? `2px solid oklch(0.67 0.165 160 / ${copyGlow.toFixed(3)})` : undefined, outlineOffset: 3, transform: `scale(${pressScale(f, TAP_COPY)})`}}>
                   Copy last month
                 </Button>
-                <Button variant="primary" size="sm" icon="plus">
+                <Button variant="primary" size="sm" icon="plus" style={{transform: `scale(${pressScale(f, TAP_SET)})`}}>
                   Set a budget
                 </Button>
               </div>
@@ -215,8 +217,8 @@ export const Scene = () => {
             {list && (
               <div style={{display: 'grid', gap: 10}}>
                 {rows.map((row, i) => {
-                  const inP = copied ? prog(f, COPIED_AT + i * 6, 24, back) : row.name === 'Makan' ? cardIn : 1;
-                  const fade = copied ? prog(f, COPIED_AT + i * 6, 8) : (row.name === 'Makan' ? prog(f, CARD_AT, 8) : 1) * (1 - out);
+                  const inP = copied ? prog(f, COPIED_AT + i * 4, 26, E.out) : row.name === 'Makan' ? cardIn : 1;
+                  const fade = copied ? prog(f, COPIED_AT + i * 4, 10, E.smooth) : (row.name === 'Makan' ? prog(f, CARD_AT, 8) : 1) * (1 - out);
                   return (
                     <div key={row.name} style={{opacity: fade, transform: copied ? `translateX(${(1 - inP) * -420}px)` : row.name === 'Makan' ? `translateY(${(1 - inP) * 30}px) scale(${0.94 + 0.06 * inP})` : `translateX(${-out * 420 * (1 + i * 0.15)}px)`}}>
                       <BudgetCard row={row} mark={row.name === 'Makan' && !copied ? {at: MARK_AT, f} : undefined} />
@@ -255,22 +257,22 @@ export const Scene = () => {
               </div>
             </Field>
             <Field label="Monthly limit" required>
-              <Input value={limit} placeholder="1.500.000" prefix="Rp" focus={typing ? 1 : 0} caret={typing && caretOn(f)} />
+              <Input value={limit} placeholder="1.500.000" prefix="Rp" focus={typing ? 1 : 0} caret={typing && caretOn(f)} fresh={newest('2.000.000', f, LIMIT_AT, 14)} />
               <div style={{fontSize: 12, color: C.inkSoft}}>Whole rupiah.</div>
             </Field>
             <div style={{display: 'flex', gap: 8, marginTop: 4}}>
               <Button variant="ghost">Cancel</Button>
-              <Button variant="primary" size="lg" style={{flex: 1}}>
+              <Button variant="primary" size="lg" style={{flex: 1, transform: `scale(${pressScale(f, TAP_SAVE)})`}}>
                 Set budget
               </Button>
             </div>
           </Sheet>
         </div>
       </Phone>
-      <Ring f={f} at={TAP_SET} x={SET_BTN.x} y={SET_BTN.y} r0={16} r1={90} dur={22} color={C.accent} />
-      <Ring f={f} at={TAP_SAVE} x={SAVE_BTN.x} y={SAVE_BTN.y} r0={16} r1={110} dur={22} color={C.accent} />
-      <Ring f={f} at={NOV_AT} x={NEXT_BTN.x} y={NEXT_BTN.y} r0={12} r1={70} dur={22} color={C.accent} />
-      <Ring f={f} at={TAP_COPY} x={COPY_BTN.x} y={COPY_BTN.y} r0={16} r1={100} dur={22} color={C.accent} />
+      <Tap f={f} at={TAP_SET} x={SET_BTN.x} y={SET_BTN.y} w={125 * ZOOM} h={36 * ZOOM} />
+      <Tap f={f} at={TAP_SAVE} x={SAVE_BTN.x} y={SAVE_BTN.y} w={251 * ZOOM} h={48 * ZOOM} />
+      <Tap f={f} at={NOV_AT} x={NEXT_BTN.x} y={NEXT_BTN.y} w={36 * ZOOM} h={36 * ZOOM} />
+      <Tap f={f} at={TAP_COPY} x={COPY_BTN.x} y={COPY_BTN.y} w={160 * ZOOM} h={36 * ZOOM} />
     </AbsoluteFill>
   );
 };

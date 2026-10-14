@@ -2,13 +2,14 @@
 // and the one-time link comes back: shown once, for that address only.
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import type {ReactNode} from 'react';
-import {type CameraKey, type Cue, back, fadeUp, prog, spin} from '../../lib/core';
-import {Marker, Ring, YELLOW_MARK} from '../../lib/Fx';
+import {type CameraKey, type Cue, prog} from '../../lib/core';
+import {Marker, YELLOW_MARK} from '../../lib/Fx';
+import {E, Tap, hitPulse, pressScale, usePhoneIn} from '../../lib/motion';
 import {APP_W, TabBar} from '../../lib/Home';
 import {Lucide, Tile, type IconName} from '../../lib/lucide';
 import {C, body, type Tone} from '../../lib/palette';
 import {Phone, bezel} from '../../lib/Phone';
-import {Button, Field, Input, PANEL, PageHeader, Sheet, caretOn, typed} from '../../lib/ui';
+import {Button, Field, Input, PANEL, PageHeader, Sheet, caretOn, newest, typed} from '../../lib/ui';
 import {cue} from '../voice';
 
 // VO: "Mau berbagi?" | "Buat workspace bersama," | "undang lewat email," | "pilih perannya:" | "pemilik," | "editor,"
@@ -41,7 +42,6 @@ const CREATE_BTN = toScene(298, SCREEN_H - 50);
 const INVITE_BTN = toScene(331, 400);
 const SEND_BTN = toScene(296, SCREEN_H - 50);
 const COPY_BTN = toScene(328, SCREEN_H - 110);
-const glow = (f: number, at: number) => (f >= at ? Math.exp(-(f - at) / 12) : 0);
 
 const ROLES = [
   {label: 'Owner', blurb: 'Full control, including members and invitations.'},
@@ -52,10 +52,10 @@ const EMAIL = 'rani@gmail.com';
 
 export const camera: CameraKey[] = [
   {at: 0, zoom: 1.2, x: 540, y: 620, dur: 1},
-  {at: SHEET1_UP + 6, zoom: 1.5, x: 540, y: 1250, dur: 30},
-  {at: SHEET1_DOWN, zoom: 1.3, x: 540, y: 800, dur: 30},
-  {at: SHEET2_UP + 6, zoom: 1.45, x: 540, y: 1150, dur: 30},
-  {at: LINK_AT, zoom: 1.55, x: 540, y: 1250, dur: 30},
+  {at: SHEET1_UP + 6, zoom: 1.5, x: 540, y: 1250},
+  {at: SHEET1_DOWN, zoom: 1.3, x: 540, y: 800},
+  {at: SHEET2_UP + 6, zoom: 1.45, x: 540, y: 1150},
+  {at: LINK_AT, zoom: 1.55, x: 540, y: 1250},
 ];
 
 export const sfx: Cue[] = [
@@ -122,40 +122,43 @@ const SelectBox = ({value, hint}: {value: string; hint?: string}) => (
 
 export const Scene = () => {
   const f = useCurrentFrame();
-  const phoneIn = prog(f, 0, 26);
-  const up1 = prog(f, SHEET1_UP, 22) * (1 - prog(f, SHEET1_DOWN, 16));
-  const up2 = prog(f, SHEET2_UP, 22);
+  const phoneIn = usePhoneIn();
+  const up1 = prog(f, SHEET1_UP, 44, E.glide) * (1 - prog(f, SHEET1_DOWN, 24, E.exit));
+  const up2 = prog(f, SHEET2_UP, 44, E.glide);
   const up = Math.max(up1, up2);
   const name = typed('Keluarga', f, NAME_AT, 16);
   const typingName = f >= NAME_AT && f < NAME_AT + 40;
   const created = f >= WS_AT;
-  const wsIn = prog(f, WS_AT, 24, back);
+  const slot = prog(f, WS_AT - 6, 16, E.ui); // Keluarga's row opens its slot under Personal
+  const wsIn = prog(f, WS_AT, 22, E.out);
   const email = typed(EMAIL, f, EMAIL_AT, 24);
   const typingEmail = f >= EMAIL_AT && f < EMAIL_AT + 44;
-  const listOpen = prog(f, ROLE_OPEN, 14) * (1 - prog(f, ROLE_CLOSE, 10));
+  const listOpen = prog(f, ROLE_OPEN, 14, E.out) * (1 - prog(f, ROLE_CLOSE, 10, E.smooth));
   const linked = f >= LINK_AT;
   const linkIn = prog(f, LINK_AT, 14);
-  const lockIn = prog(f, ONCE_AT, 20, back);
+  const lockIn = prog(f, ONCE_AT, 20, E.out);
   const copiedAt = TAP_COPY + 6;
 
   return (
     <AbsoluteFill>
-      <Phone w={PHONE.w} h={PHONE.h} screen={C.surface} style={{left: PHONE.left, top: PHONE.top, borderRadius: 96, ...fadeUp(phoneIn, 90)}}>
+      <Phone w={PHONE.w} h={PHONE.h} screen={C.surface} variant="android" style={{left: PHONE.left, top: PHONE.top, borderRadius: 96, ...phoneIn}}>
         <div style={{position: 'absolute', left: 0, top: 0, width: APP_W, height: SCREEN_H, transformOrigin: 'top left', transform: `scale(${ZOOM})`, fontFamily: body, color: C.ink}}>
           <div style={{padding: '48px 16px 16px', display: 'grid', gap: 16}}>
             <div>
               <PageHeader title="Workspaces" subtitle="A personal workspace is yours alone. Shared workspaces have members and roles." />
               <div style={{marginTop: 12}}>
-                <Button variant="primary" size="sm" icon="plus">
+                <Button variant="primary" size="sm" icon="plus" style={{transform: `scale(${pressScale(f, TAP_NEW)})`}}>
                   New shared workspace
                 </Button>
               </div>
             </div>
             <Card title="Your workspaces">
               <WsRow icon="house" tone="mint" name="Personal" sub="Personal, owner" active={!created} />
-              {created && (
-                <div style={{opacity: prog(f, WS_AT, 8), transform: `translateY(${(1 - wsIn) * 20}px) scale(${0.95 + 0.05 * wsIn})`}}>
-                  <WsRow icon="users" tone="sky" name="Keluarga" sub="Shared, owner" active divider />
+              {f >= WS_AT - 6 && (
+                <div style={{height: 61 * slot}}>
+                  <div style={{opacity: prog(f, WS_AT, 10, E.smooth), transform: `translateY(${(1 - wsIn) * 12}px)`}}>
+                    <WsRow icon="users" tone="sky" name="Keluarga" sub="Shared, owner" active divider />
+                  </div>
                 </div>
               )}
             </Card>
@@ -164,7 +167,7 @@ export const Scene = () => {
               description={created ? 'Removing someone ends their access right away.' : 'Just you in here. Create a shared workspace to budget with someone else.'}
               action={
                 created ? (
-                  <Button variant="secondary" size="sm" icon="userPlus">
+                  <Button variant="secondary" size="sm" icon="userPlus" style={{transform: `scale(${pressScale(f, TAP_INVITE)})`}}>
                     Invite
                   </Button>
                 ) : undefined
@@ -191,11 +194,11 @@ export const Scene = () => {
           {f < SHEET2_UP && (
             <Sheet up={up1} title="New shared workspace" description="You become its owner. Nobody else has access until you invite them.">
               <Field label="Name" required>
-                <Input value={name} placeholder="Household" focus={typingName ? 1 : 0} caret={typingName && caretOn(f)} />
+                <Input value={name} placeholder="Household" focus={typingName ? 1 : 0} caret={typingName && caretOn(f)} fresh={newest('Keluarga', f, NAME_AT, 16)} />
               </Field>
               <div style={{display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4}}>
                 <Button variant="secondary">Cancel</Button>
-                <Button variant="primary">Create workspace</Button>
+                <Button variant="primary" style={{transform: `scale(${pressScale(f, TAP_CREATE)})`}}>Create workspace</Button>
               </div>
             </Sheet>
           )}
@@ -204,14 +207,14 @@ export const Scene = () => {
               {!linked ? (
                 <>
                   <Field label="Email address" required>
-                    <Input value={email} placeholder="name@example.com" focus={typingEmail ? 1 : 0} caret={typingEmail && caretOn(f)} />
+                    <Input value={email} placeholder="name@example.com" focus={typingEmail ? 1 : 0} caret={typingEmail && caretOn(f)} fresh={newest(EMAIL, f, EMAIL_AT, 24)} />
                   </Field>
                   <Field label="Role">
                     <SelectBox value="Editor" hint={listOpen > 0 ? undefined : ROLES[1].blurb} />
                     {listOpen > 0 && (
                       <div style={{...PANEL, padding: 4, display: 'grid', opacity: listOpen, transform: `translateY(${(1 - listOpen) * -8}px)`}}>
                         {ROLES.map((r, i) => {
-                          const hot = glow(f, ROLE_AT[i]);
+                          const hot = hitPulse(f, ROLE_AT[i]);
                           return (
                             <div key={r.label} style={{display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 12, background: `oklch(0.67 0.165 160 / ${(0.2 * hot).toFixed(3)})`, transform: `scale(${1 + 0.03 * hot})`}}>
                               <div style={{flex: 1}}>
@@ -230,7 +233,7 @@ export const Scene = () => {
                   </Field>
                   <div style={{display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4}}>
                     <Button variant="secondary">Cancel</Button>
-                    <Button variant="primary">Create invitation</Button>
+                    <Button variant="primary" style={{transform: `scale(${pressScale(f, TAP_SEND)})`}}>Create invitation</Button>
                   </div>
                 </>
               ) : (
@@ -256,12 +259,12 @@ export const Scene = () => {
                       arus-finance.farizz-a.workers.dev/invite/f8c2…
                       {/* One-time: the lock lands on the link as the voice says "sekali". */}
                       {f >= ONCE_AT && (
-                        <span style={{position: 'absolute', top: -12, right: -8, display: 'grid', placeItems: 'center', width: 28, height: 28, borderRadius: '50%', background: C.accentStrong, boxShadow: '0 6px 14px -4px oklch(0.5 0.125 162 / 0.6)', opacity: prog(f, ONCE_AT, 8), transform: `scale(${0.6 + 0.4 * lockIn}) rotate(${spin(f, ONCE_AT, 24, -120)}deg)`}}>
+                        <span style={{position: 'absolute', top: -12, right: -8, display: 'grid', placeItems: 'center', width: 28, height: 28, borderRadius: '50%', background: C.accentStrong, boxShadow: '0 6px 14px -4px oklch(0.5 0.125 162 / 0.6)', opacity: prog(f, ONCE_AT, 10, E.smooth), transform: `scale(${(0.6 + 0.4 * lockIn) * (1 + 0.1 * hitPulse(f, ONCE_AT + 14, 3, 8))})`}}>
                           <Lucide name="lock" size={14} color={C.onAccent} strokeWidth={2.6} />
                         </span>
                       )}
                     </div>
-                    <Button variant="secondary" icon={f >= copiedAt ? 'check' : 'copy'}>
+                    <Button variant="secondary" icon={f >= copiedAt ? 'check' : 'copy'} style={{transform: `scale(${pressScale(f, TAP_COPY)})`}}>
                       {f >= copiedAt ? 'Copied' : 'Copy'}
                     </Button>
                   </div>
@@ -274,11 +277,11 @@ export const Scene = () => {
           )}
         </div>
       </Phone>
-      <Ring f={f} at={TAP_NEW} x={NEW_BTN.x} y={NEW_BTN.y} r0={16} r1={90} dur={22} color={C.accent} />
-      <Ring f={f} at={TAP_CREATE} x={CREATE_BTN.x} y={CREATE_BTN.y} r0={16} r1={100} dur={22} color={C.accent} />
-      <Ring f={f} at={TAP_INVITE} x={INVITE_BTN.x} y={INVITE_BTN.y} r0={14} r1={80} dur={22} color={C.accent} />
-      <Ring f={f} at={TAP_SEND} x={SEND_BTN.x} y={SEND_BTN.y} r0={16} r1={100} dur={22} color={C.accent} />
-      <Ring f={f} at={TAP_COPY} x={COPY_BTN.x} y={COPY_BTN.y} r0={14} r1={80} dur={22} color={C.accent} />
+      <Tap f={f} at={TAP_NEW} x={NEW_BTN.x} y={NEW_BTN.y} w={200 * ZOOM} h={36 * ZOOM} />
+      <Tap f={f} at={TAP_CREATE} x={CREATE_BTN.x} y={CREATE_BTN.y} w={165 * ZOOM} h={44 * ZOOM} />
+      <Tap f={f} at={TAP_INVITE} x={INVITE_BTN.x} y={INVITE_BTN.y} w={92 * ZOOM} h={36 * ZOOM} />
+      <Tap f={f} at={TAP_SEND} x={SEND_BTN.x} y={SEND_BTN.y} w={160 * ZOOM} h={44 * ZOOM} />
+      <Tap f={f} at={TAP_COPY} x={COPY_BTN.x} y={COPY_BTN.y} w={96 * ZOOM} h={44 * ZOOM} />
     </AbsoluteFill>
   );
 };

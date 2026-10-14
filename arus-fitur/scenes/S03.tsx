@@ -1,13 +1,14 @@
 // S3 — Kategori: the Categories page. A new category in the sheet (name, used for, icon, colour, previewed live
 // at the top) lands in the list; an old one is archived, not deleted, and its past transaction keeps its name.
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, back, fadeUp, inOut, prog} from '../../lib/core';
-import {Marker, Ring, YELLOW_MARK} from '../../lib/Fx';
+import {type CameraKey, type Cue, prog} from '../../lib/core';
+import {Marker, YELLOW_MARK} from '../../lib/Fx';
+import {E, Tap, hitPulse, pressScale, punch, usePhoneIn} from '../../lib/motion';
 import {APP_W, TabBar} from '../../lib/Home';
 import {CATEGORY, Lucide, Tile, type IconName} from '../../lib/lucide';
 import {C, body, pop, type Tone} from '../../lib/palette';
 import {Phone, bezel} from '../../lib/Phone';
-import {Button, Chips, Colours, Field, ICON_BOX, IconGrid, Input, PANEL, PageHeader, Sheet, caretOn, iconScroll, typed} from '../../lib/ui';
+import {Button, Chips, Colours, Field, ICON_BOX, IconGrid, Input, PANEL, PageHeader, Sheet, caretOn, iconScroll, newest, typed} from '../../lib/ui';
 import {cue} from '../voice';
 
 // VO: "Lalu kategori." | "Beri nama," | "pilih untuk pengeluaran atau pemasukan," | "pilih ikonnya," | "dan warnanya."
@@ -52,7 +53,7 @@ const autoTone = (name: string) => {
   for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) | 0;
   return ROTATION[Math.abs(h) % ROTATION.length];
 };
-const glow = (f: number, at: number) => (f >= at ? Math.exp(-(f - at) / 12) : 0);
+const glow = (f: number, at: number) => hitPulse(f, at);
 
 const EXPENSES: {name: string; icon: IconName; tone: Tone}[] = [
   {name: 'Makan', ...CATEGORY.Makan},
@@ -64,11 +65,13 @@ const EXPENSES: {name: string; icon: IconName; tone: Tone}[] = [
 
 export const camera: CameraKey[] = [
   {at: 0, zoom: 1.2, x: 540, y: 620, dur: 1},
-  {at: SHEET_UP + 6, zoom: 1.45, x: 540, y: 720, dur: 30},
-  {at: SCROLL_AT - 12, zoom: 1.4, x: 540, y: 1100, dur: 30},
-  {at: SHEET_DOWN, zoom: 1.3, x: 540, y: 780, dur: 30},
-  {at: TAP_ARCHIVE - 12, zoom: 1.4, x: 540, y: 900, dur: 30},
-  {at: TOAST_AT - 6, zoom: 1.5, x: 540, y: 1350, dur: 30},
+  {at: SHEET_UP + 6, zoom: 1.45, x: 540, y: 720},
+  {at: SCROLL_AT - 12, zoom: 1.4, x: 540, y: 1100},
+  // The dumbbell: hard cut in as it is picked, back out for the colour.
+  ...punch(TAP_ICON - 2, ICON_BTN.x, ICON_BTN.y, {zoom: 1.4, x: 540, y: 1100}, 2.3, 30),
+  {at: SHEET_DOWN, zoom: 1.3, x: 540, y: 780},
+  {at: TAP_ARCHIVE - 12, zoom: 1.4, x: 540, y: 900},
+  {at: TOAST_AT - 6, zoom: 1.5, x: 540, y: 1350},
 ];
 
 export const sfx: Cue[] = [
@@ -115,14 +118,15 @@ const Card = ({title, children}: {title: string; children: React.ReactNode}) => 
 
 export const Scene = () => {
   const f = useCurrentFrame();
-  const phoneIn = prog(f, 0, 26);
-  const up = prog(f, SHEET_UP, 22) * (1 - prog(f, SHEET_DOWN, 16));
+  const phoneIn = usePhoneIn();
+  const up = prog(f, SHEET_UP, 44, E.glide) * (1 - prog(f, SHEET_DOWN, 24, E.exit));
   const name = typed('Olahraga', f, NAME_AT, 12);
   const typingName = f >= NAME_AT && f < NAME_AT + 50;
-  const rowIn = prog(f, ROW_AT, 22, back);
+  const slot = prog(f, ROW_AT - 6, 16, E.ui); // the new row's slot opens; its content arrives once half open
+  const rowIn = prog(f, ROW_AT, 22, E.out);
   const gone = prog(f, ARCHIVED_AT, 18); // Hiburan leaves the Expenses list…
-  const shelf = prog(f, ARCHIVED_AT + 10, 22, back); // …and lands on the Archived shelf
-  const toast = prog(f, TOAST_AT, 18, back);
+  const shelf = prog(f, ARCHIVED_AT + 10, 26, E.out); // …and lands on the Archived shelf
+  const toast = prog(f, TOAST_AT, 22, E.out);
   // The preview at the top of the sheet: the tile as it will look in lists, updating as the fields change.
   const icon: IconName = f >= TAP_ICON ? ICON : 'tag';
   const colour = f >= COLOR_AT ? SWATCH : null;
@@ -130,19 +134,23 @@ export const Scene = () => {
 
   return (
     <AbsoluteFill>
-      <Phone w={PHONE.w} h={PHONE.h} screen={C.surface} style={{left: PHONE.left, top: PHONE.top, borderRadius: 96, ...fadeUp(phoneIn, 90)}}>
+      <Phone w={PHONE.w} h={PHONE.h} screen={C.surface} style={{left: PHONE.left, top: PHONE.top, borderRadius: 96, ...phoneIn}}>
         <div style={{position: 'absolute', left: 0, top: 0, width: APP_W, height: SCREEN_H, transformOrigin: 'top left', transform: `scale(${ZOOM})`, fontFamily: body, color: C.ink}}>
           <div style={{padding: '48px 16px 16px', display: 'grid', gap: 16}}>
-            <PageHeader title="Categories" subtitle="Categories are archived, never deleted, so past transactions keep their meaning." action={<Button variant="primary" size="sm" icon="plus">New category</Button>} />
+            <PageHeader title="Categories" subtitle="Categories are archived, never deleted, so past transactions keep their meaning." action={<Button variant="primary" size="sm" icon="plus" style={{transform: `scale(${pressScale(f, TAP_NEW)})`}}>New category</Button>} />
             <Card title="Expenses">
               {EXPENSES.map((c) => (
                 <div key={c.name} style={c.name === 'Hiburan' ? {height: 44 * (1 - gone), overflow: 'hidden'} : undefined}>
                   <Row {...c} fade={c.name === 'Hiburan' ? 1 - gone : 1} />
                 </div>
               ))}
-              {f >= ROW_AT && (
-                <div style={{opacity: prog(f, ROW_AT, 8), transform: `translateY(${(1 - rowIn) * 20}px) scale(${0.95 + 0.05 * rowIn})`}}>
-                  <Row name="Olahraga" icon={ICON} tone="sky" color={SWATCH} />
+              {f >= ROW_AT - 6 && (
+                <div style={{position: 'relative', height: 44 * slot}}>
+                  {/* A 2 px accent line marks where the row goes in, then relaxes away. */}
+                  <div style={{position: 'absolute', left: 0, right: 0, top: -1, height: 2, borderRadius: 1, background: C.accent, opacity: 1 - prog(f, ROW_AT, 24, E.smooth)}} />
+                  <div style={{opacity: prog(f, ROW_AT, 10, E.smooth), transform: `translateY(${(1 - rowIn) * 12}px)`}}>
+                    <Row name="Olahraga" icon={ICON} tone="sky" color={SWATCH} />
+                  </div>
                 </div>
               )}
             </Card>
@@ -187,29 +195,29 @@ export const Scene = () => {
               </div>
             </div>
             <Field label="Name" required>
-              <Input value={name} placeholder="e.g. Groceries" focus={typingName ? 1 : 0} caret={typingName && caretOn(f)} />
+              <Input value={name} placeholder="e.g. Groceries" focus={typingName ? 1 : 0} caret={typingName && caretOn(f)} fresh={newest('Olahraga', f, NAME_AT, 12)} />
             </Field>
             <Field label="Used for" required>
               <Chips options={[{label: 'Expenses', icon: 'arrowUpRight'}, {label: 'Income', icon: 'arrowDownLeft'}]} value={f >= USED_AT[0] ? 'Expenses' : undefined} lit={{Expenses: glow(f, USED_AT[0]), Income: glow(f, USED_AT[1])}} />
             </Field>
             <Field label="Icon">
-              <IconGrid value={f >= TAP_ICON ? ICON : 'tag'} scroll={SCROLL_TO * prog(f, SCROLL_AT, 36, inOut)} lit={glow(f, TAP_ICON)} />
+              <IconGrid value={f >= TAP_ICON ? ICON : 'tag'} scroll={SCROLL_TO * prog(f, SCROLL_AT, 40, E.glide)} lit={glow(f, TAP_ICON)} />
             </Field>
             <Field label="Colour">
               <Colours value={colour} lit={{[SWATCH]: glow(f, COLOR_AT)}} />
             </Field>
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4}}>
               <Button variant="secondary">Cancel</Button>
-              <Button variant="primary">Create category</Button>
+              <Button variant="primary" style={{transform: `scale(${pressScale(f, TAP_SAVE)})`}}>Create category</Button>
             </div>
           </Sheet>
         </div>
       </Phone>
-      <Ring f={f} at={TAP_NEW} x={NEW_BTN.x} y={NEW_BTN.y} r0={16} r1={90} dur={22} color={C.accent} />
-      <Ring f={f} at={TAP_ICON} x={ICON_BTN.x} y={ICON_BTN.y} r0={14} r1={80} dur={22} color={C.accent} />
-      <Ring f={f} at={COLOR_AT} x={SKY_DOT.x} y={SKY_DOT.y} r0={14} r1={70} dur={22} color={C.accent} />
-      <Ring f={f} at={TAP_SAVE} x={SAVE_BTN.x} y={SAVE_BTN.y} r0={16} r1={100} dur={22} color={C.accent} />
-      <Ring f={f} at={TAP_ARCHIVE} x={ARCHIVE_BTN.x} y={ARCHIVE_BTN.y} r0={14} r1={80} dur={22} color={C.accent} />
+      <Tap f={f} at={TAP_NEW} x={NEW_BTN.x} y={NEW_BTN.y} w={140 * ZOOM} h={36 * ZOOM} />
+      <Tap f={f} at={TAP_ICON} x={ICON_BTN.x} y={ICON_BTN.y} w={ICON_BOX.cell * ZOOM} h={ICON_BOX.cell * ZOOM} r={16 * ZOOM} />
+      <Tap f={f} at={COLOR_AT} x={SKY_DOT.x} y={SKY_DOT.y} w={36 * ZOOM} h={36 * ZOOM} />
+      <Tap f={f} at={TAP_SAVE} x={SAVE_BTN.x} y={SAVE_BTN.y} w={150 * ZOOM} h={44 * ZOOM} />
+      <Tap f={f} at={TAP_ARCHIVE} x={ARCHIVE_BTN.x} y={ARCHIVE_BTN.y} w={32 * ZOOM} h={32 * ZOOM} />
     </AbsoluteFill>
   );
 };

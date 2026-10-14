@@ -2,8 +2,8 @@
 // it shows in the profile ring right away, then on Home, over the wave mark.
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import type {CSSProperties} from 'react';
-import {type CameraKey, type Cue, back, fadeUp, inOut, lerp, prog} from '../../lib/core';
-import {Ring} from '../../lib/Fx';
+import {type CameraKey, type Cue, inOut, lerp, prog} from '../../lib/core';
+import {E, Tap, hitPulse, pressScale, punch, usePhoneIn} from '../../lib/motion';
 import {APP_W, HOME, Home, TabBar} from '../../lib/Home';
 import {Lucide} from '../../lib/lucide';
 import {C, body} from '../../lib/palette';
@@ -37,15 +37,17 @@ const TILE = 129;
 const PICKER_H = 44 + TILE * 2 + 3 + 28;
 const PHOTO_BTN = toScene(181, 186);
 const PICK = toScene(197, SCREEN_H - PICKER_H + 44 + TILE + 3 + TILE / 2);
-const AVATAR_AT = toScene(AVATAR.x, AVATAR.y);
 const HOME_TAB = toScene(46, SCREEN_H - 62);
 const HOME_AVATAR = toScene(HOME.avatar.x, HOME.avatar.y);
+const CROP_MID = toScene(SQ.x + SQ.s / 2, SQ.y + SQ.s / 2);
 
 export const camera: CameraKey[] = [
   {at: 0, zoom: 1.3, x: 540, y: 560, dur: 1},
-  {at: PICKER_UP + 6, zoom: 1.35, x: 540, y: 1250, dur: 30},
-  {at: PHOTO_AT, zoom: 1.3, x: 540, y: 900, dur: 30},
-  {at: HOME_AT + 8, zoom: 1.8, x: HOME_AVATAR.x, y: HOME_AVATAR.y + 60, dur: 36},
+  {at: PICKER_UP + 6, zoom: 1.35, x: 540, y: 1250},
+  {at: PHOTO_AT, zoom: 1.3, x: 540, y: 900},
+  // "persegi": hard cut in on the square as it is framed, back out before it shrinks into the ring.
+  ...punch(CROP_AT - 2, CROP_MID.x, CROP_MID.y, {zoom: 1.3, x: 540, y: 900}, 2, 36),
+  {at: HOME_AT + 8, zoom: 1.8, x: HOME_AVATAR.x, y: HOME_AVATAR.y + 60},
 ];
 
 export const sfx: Cue[] = [
@@ -72,28 +74,28 @@ const Photo = ({w, h, hue = 0, style}: {w: number; h: number; hue?: number; styl
 
 export const Scene = () => {
   const f = useCurrentFrame();
-  const phoneIn = prog(f, 0, 26);
-  const picker = prog(f, PICKER_UP, 22) * (1 - prog(f, PICKER_DOWN, 16));
-  const photoIn = prog(f, PHOTO_AT, 24, back);
+  const phoneIn = usePhoneIn();
+  const picker = prog(f, PICKER_UP, 44, E.glide) * (1 - prog(f, PICKER_DOWN, 24, E.exit));
+  const photoIn = prog(f, PHOTO_AT, 26, E.out);
   const crop = prog(f, CROP_AT, 20);
   const fly = prog(f, SHRINK_AT, 30, inOut);
   const landed = f >= ARRIVE;
   const S = lerp(SQ.s, AVATAR.r * 2, fly);
   const sx = lerp(SQ.x, AVATAR.x - AVATAR.r, fly);
   const sy = lerp(SQ.y, AVATAR.y - AVATAR.r, fly);
-  const toast = prog(f, TOAST_AT, 18, back);
+  const toast = prog(f, TOAST_AT, 22, E.out);
   const home = prog(f, HOME_AT + 2, 16);
 
   return (
     <AbsoluteFill>
-      <Phone w={PHONE.w} h={PHONE.h} screen={C.surface} variant="android" style={{left: PHONE.left, top: PHONE.top, borderRadius: 96, ...fadeUp(phoneIn, 90)}}>
+      <Phone w={PHONE.w} h={PHONE.h} screen={C.surface} variant="android" style={{left: PHONE.left, top: PHONE.top, borderRadius: 96, ...phoneIn}}>
         <div style={{position: 'absolute', left: 0, top: 0, width: APP_W, height: SCREEN_H, transformOrigin: 'top left', transform: `scale(${ZOOM})`, fontFamily: body, color: C.ink}}>
           <div style={{padding: '48px 16px 16px', display: 'grid', gap: 16}}>
             <PageHeader title="Settings" />
             <div style={{...PANEL, padding: 16}}>
               <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
                 {/* Jade ring around the photo: the profile-page look. */}
-                <span style={{flex: 'none', width: 86, height: 86, borderRadius: '50%', padding: 3, boxSizing: 'border-box', background: C.brandTile}}>
+                <span style={{flex: 'none', width: 86, height: 86, borderRadius: '50%', padding: 3, boxSizing: 'border-box', background: C.brandTile, transform: `scale(${1 + 0.06 * hitPulse(f, ARRIVE, 3, 10)})`}}>
                   <span style={{position: 'relative', display: 'grid', placeItems: 'center', width: 80, height: 80, borderRadius: '50%', border: `3px solid ${C.raised}`, boxSizing: 'border-box', overflow: 'hidden', background: C.accentSoft, color: C.accentInk, fontSize: 24, fontWeight: 800}}>
                     J{landed && <Photo w={111} h={74} style={{position: 'absolute', left: -18.5, top: 0, opacity: prog(f, ARRIVE, 6)}} />}
                   </span>
@@ -102,7 +104,7 @@ export const Scene = () => {
                   <div style={{fontSize: 20, fontWeight: 800, color: C.ink, lineHeight: 1.15}}>Jane</div>
                   <div style={{marginTop: 2, fontSize: 14, color: C.inkSoft}}>jane@gmail.com</div>
                   <div style={{marginTop: 12, display: 'flex', alignItems: 'center', gap: 4}}>
-                    <Button variant="secondary" size="sm" icon="camera">
+                    <Button variant="secondary" size="sm" icon="camera" style={{transform: `scale(${pressScale(f, TAP_PHOTO)})`}}>
                       Photo
                     </Button>
                     {landed && (
@@ -174,11 +176,9 @@ export const Scene = () => {
           </div>
         </div>
       </Phone>
-      <Ring f={f} at={TAP_PHOTO} x={PHOTO_BTN.x} y={PHOTO_BTN.y} r0={16} r1={90} dur={22} color={C.accent} />
-      <Ring f={f} at={TAP_PICK} x={PICK.x} y={PICK.y} r0={20} r1={120} dur={22} color={C.accent} />
-      <Ring f={f} at={ARRIVE} x={AVATAR_AT.x} y={AVATAR_AT.y} r0={50} r1={140} dur={28} color={C.accent} />
-      <Ring f={f} at={HOME_AT} x={HOME_TAB.x} y={HOME_TAB.y} r0={20} r1={80} dur={22} color={C.accent} />
-      <Ring f={f} at={HOME_AT + 20} x={HOME_AVATAR.x} y={HOME_AVATAR.y} r0={50} r1={130} dur={28} color={C.highlight} width={4} />
+      <Tap f={f} at={TAP_PHOTO} x={PHOTO_BTN.x} y={PHOTO_BTN.y} w={100 * ZOOM} h={36 * ZOOM} />
+      <Tap f={f} at={TAP_PICK} x={PICK.x} y={PICK.y} w={TILE * ZOOM} h={TILE * ZOOM} r={0} />
+      <Tap f={f} at={HOME_AT} x={HOME_TAB.x} y={HOME_TAB.y} w={56 * ZOOM} h={32 * ZOOM} />
     </AbsoluteFill>
   );
 };

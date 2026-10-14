@@ -1,0 +1,298 @@
+{
+  "S1": {
+    "file": "vo/arus-shortcut/S1.wav",
+    "engine": "stand-in",
+    "lead": 2.6,
+    "tail": 0.5,
+    "seconds": 4.323,
+    "segments": [
+      {
+        "text": "Ketuk, ketuk.",
+        "start": 0,
+        "end": 1.1
+      },
+      {
+        "text": "TERCATAT.",
+        "start": 1.45,
+        "end": 2.187
+      },
+      {
+        "text": "Begini cara pasangnya.",
+        "start": 2.687,
+        "end": 4.323
+      }
+    ]
+  },
+  "S2": {
+    "file": "vo/arus-shortcut/S2.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.5,
+    "seconds": 11.358,
+    "segments": [
+      {
+        "text": "Shortcut ini membaca teks dari tangkapan layar struk,",
+        "start": 0,
+        "end": 3.816
+      },
+      {
+        "text": "LANGSUNG di iPhone-mu.",
+        "start": 4.116,
+        "end": 5.812
+      },
+      {
+        "text": "Gambarnya tidak pernah dikirim,",
+        "start": 6.212,
+        "end": 8.555
+      },
+      {
+        "text": "dan Arus tidak pernah terhubung ke bank.",
+        "start": 8.755,
+        "end": 11.358
+      }
+    ]
+  },
+  "S3": {
+    "file": "vo/arus-shortcut/S3.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.5,
+    "seconds": 18.646,
+    "segments": [
+      {
+        "text": "Pertama, buka Pengaturan,",
+        "start": 0,
+        "end": 1.984
+      },
+      {
+        "text": "lalu iPhone quick add.",
+        "start": 2.184,
+        "end": 3.847
+      },
+      {
+        "text": "Pilih Akun apa saja, biar Arus yang menentukan,",
+        "start": 4.147,
+        "end": 7.841
+      },
+      {
+        "text": "lalu Buat token.",
+        "start": 8.041,
+        "end": 9.408
+      },
+      {
+        "text": "Kamu dapat tiga nilai:",
+        "start": 9.708,
+        "end": 11.474
+      },
+      {
+        "text": "URL,",
+        "start": 11.724,
+        "end": 12.435
+      },
+      {
+        "text": "apikey,",
+        "start": 12.635,
+        "end": 13.494
+      },
+      {
+        "text": "dan token.",
+        "start": 13.694,
+        "end": 14.676
+      },
+      {
+        "text": "Token hanya tampil SEKALI, jadi langsung salin.",
+        "start": 14.976,
+        "end": 18.646
+      }
+    ]
+  },
+  "S4": {
+    "file": "vo/arus-shortcut/S4.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.5,
+    "seconds": 13.064,
+    "segments": [
+      {
+        "text": "Buka aplikasi Pintasan.",
+        "start": 0,
+        "end": 1.939
+      },
+      {
+        "text": "Tambahkan:",
+        "start": 2.239,
+        "end": 3.175
+      },
+      {
+        "text": "Ambil Tangkapan Layar,",
+        "start": 3.425,
+        "end": 5.087
+      },
+      {
+        "text": "Ekstrak Teks dari Gambar,",
+        "start": 5.287,
+        "end": 7.186
+      },
+      {
+        "text": "lalu Dapatkan Isi URL,",
+        "start": 7.386,
+        "end": 9.522
+      },
+      {
+        "text": "dengan URL, apikey, dan token tadi.",
+        "start": 9.822,
+        "end": 13.064
+      }
+    ]
+  },
+  "S5": {
+    "file": "vo/arus-shortcut/S5.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.5,
+    "seconds": 9.715,
+    "segments": [
+      {
+        "text": "Kalau Arus BERTANYA,",
+        "start": 0,
+        "end": 1.402
+      },
+      {
+        "text": "tampilkan daftar akun atau kategorinya,",
+        "start": 1.602,
+        "end": 4.659
+      },
+      {
+        "text": "lalu kirim ulang pilihanmu.",
+        "start": 4.959,
+        "end": 6.98
+      },
+      {
+        "text": "Terakhir, Tampilkan Notifikasi.",
+        "start": 7.28,
+        "end": 9.715
+      }
+    ]
+  },
+  "S6": {
+    "file": "vo/arus-shortcut/S6.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.5,
+    "seconds": 9.371,
+    "segments": [
+      {
+        "text": "Lalu di Pengaturan iPhone:",
+        "start": 0,
+        "end": 1.774
+      },
+      {
+        "text": "Aksesibilitas,",
+        "start": 2.024,
+        "end": 3.319
+      },
+      {
+        "text": "Sentuh,",
+        "start": 3.519,
+        "end": 4.183
+      },
+      {
+        "text": "Ketuk Belakang.",
+        "start": 4.383,
+        "end": 5.51
+      },
+      {
+        "text": "Pilih Ketuk Dua Kali,",
+        "start": 5.81,
+        "end": 7.442
+      },
+      {
+        "text": "dan pasang Shortcut-mu.",
+        "start": 7.642,
+        "end": 9.371
+      }
+    ]
+  },
+  "S7": {
+    "file": "vo/arus-shortcut/S7.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.6,
+    "seconds": 10.647,
+    "segments": [
+      {
+        "text": "Sekarang coba.",
+        "start": 0,
+        "end": 1.151
+      },
+      {
+        "text": "Buka struk transfer, ketuk dua kali.",
+        "start": 1.451,
+        "end": 4.355
+      },
+      {
+        "text": "Struk pertama?",
+        "start": 4.655,
+        "end": 5.794
+      },
+      {
+        "text": "Arus bertanya SEKALI:",
+        "start": 6.144,
+        "end": 7.861
+      },
+      {
+        "text": "akun yang mana,",
+        "start": 8.111,
+        "end": 9.304
+      },
+      {
+        "text": "kategori apa.",
+        "start": 9.504,
+        "end": 10.647
+      }
+    ]
+  },
+  "S8": {
+    "file": "vo/arus-shortcut/S8.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.6,
+    "seconds": 9.788,
+    "segments": [
+      {
+        "text": "Berikutnya, struk dari layar yang sama LANGSUNG tercatat, tanpa ditanya.",
+        "start": 0,
+        "end": 5.177
+      },
+      {
+        "text": "Kirim struk yang sama dua kali?",
+        "start": 5.477,
+        "end": 7.751
+      },
+      {
+        "text": "Tetap tercatat SEKALI.",
+        "start": 8.101,
+        "end": 9.788
+      }
+    ]
+  },
+  "S9": {
+    "file": "vo/arus-shortcut/S9.wav",
+    "engine": "stand-in",
+    "lead": 0.6,
+    "tail": 1.5,
+    "seconds": 3.015,
+    "segments": [
+      {
+        "text": "Arus.",
+        "start": 0,
+        "end": 0.574
+      },
+      {
+        "text": "Lihat ke mana uangmu MENGALIR.",
+        "start": 0.974,
+        "end": 3.015
+      }
+    ]
+  }
+}
