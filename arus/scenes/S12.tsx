@@ -1,10 +1,11 @@
 // S12 · 54.13–58.07s — Encrypted in transit and at rest: a packet leaves the phone, passes through the
 // first lock and comes out scrambled, then lands in the database as the second lock closes.
 import {AbsoluteFill, Easing, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, back, cue, fadeUp, lerp, prog, spin} from '../core';
-import {Marker, scramble} from '../Fx';
-import {Database, Device, Lock} from '../icons';
-import {C, body, display} from '../palette';
+import {type CameraKey, type Cue, back, fadeUp, lerp, prog, spin} from '../../lib/core';
+import {cue} from '../voice';
+import {Marker, scramble} from '../../lib/Fx';
+import {Database, Device, Lock} from '../../lib/icons';
+import {C, body, display} from '../../lib/palette';
 
 const Y = 760;
 const LOCKS = [

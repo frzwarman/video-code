@@ -1,11 +1,12 @@
 // S11 — The screenshot is read on the iPhone and only its text leaves. The image itself is never saved,
 // never sent: once read, it dissolves.
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, cue, fadeUp, lerp, prog} from '../core';
-import {Marker, ScanBeam} from '../Fx';
-import {Logo} from '../Logo';
-import {Phone, bezel} from '../Phone';
-import {C, body, display} from '../palette';
+import {type CameraKey, type Cue, fadeUp, lerp, prog} from '../../lib/core';
+import {cue} from '../voice';
+import {Marker, ScanBeam} from '../../lib/Fx';
+import {Logo} from '../../lib/Logo';
+import {Phone, bezel} from '../../lib/Phone';
+import {C, body, display} from '../../lib/palette';
 
 // VO: "Screenshot struk dibaca di iPhone-mu SENDIRI." | "Gambarnya TIDAK PERNAH disimpan, apalagi dikirim."
 const READ_AT = cue('S11', 0, 0.3); // lines get recognised one by one

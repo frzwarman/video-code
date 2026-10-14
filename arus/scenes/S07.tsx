@@ -1,10 +1,11 @@
 // S7 — The real Arus Home (after the revamp) in a phone. The camera goes where the voice goes: the
 // "In this month" tile, the "Out this month" tile, then scrolls to a transfer in Recent activity.
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, cue, fadeUp, inOut, prog} from '../core';
-import {APP_W, HOME, Home, TabBar} from '../Home';
-import {Phone, bezel} from '../Phone';
-import {C} from '../palette';
+import {type CameraKey, type Cue, fadeUp, inOut, prog} from '../../lib/core';
+import {cue} from '../voice';
+import {APP_W, HOME, Home, TabBar} from '../../lib/Home';
+import {Phone, bezel} from '../../lib/Phone';
+import {C} from '../../lib/palette';
 
 // VO: "Dasbor menunjukkan ALUR uangmu:" | "pemasukan," | "pengeluaran," | "dan transfer antar-rekening."
 const INCOME_AT = cue('S7', 1);

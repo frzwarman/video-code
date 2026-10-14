@@ -1,9 +1,10 @@
 // S15 — Closing: logo draws its wave, wordmark, tagline, link. Last 1.5s silent hold.
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, back, cue, fadeUp, prog, spin, voiceEnd} from '../core';
-import {Marker, Ring} from '../Fx';
-import {Logo, WAVE} from '../Logo';
-import {C, body, display} from '../palette';
+import {type CameraKey, type Cue, back, fadeUp, prog, spin} from '../../lib/core';
+import {cue, voiceEnd} from '../voice';
+import {Marker, Ring} from '../../lib/Fx';
+import {Logo, WAVE} from '../../lib/Logo';
+import {C, body, display} from '../../lib/palette';
 
 const WAVE_AT = 6;
 const LINK_AT = voiceEnd('S15') + 6;

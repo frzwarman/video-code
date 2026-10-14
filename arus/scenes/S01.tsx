@@ -1,10 +1,11 @@
 // S1 · 0.0–3.22s — Hook A: the question, and a balance that drains.
 import {AbsoluteFill, interpolateColors, random, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, cue, prog, rupiah} from '../core';
-import {Bag, Bus, Coffee, Receipt, Ticket} from '../icons';
-import {C, body, display} from '../palette';
-import {FlyChip, Marker} from '../Fx';
-import {Sticker} from '../Sticker';
+import {type CameraKey, type Cue, prog, rupiah} from '../../lib/core';
+import {cue} from '../voice';
+import {Bag, Bus, Coffee, Receipt, Ticket} from '../../lib/icons';
+import {C, body, display} from '../../lib/palette';
+import {FlyChip, Marker} from '../../lib/Fx';
+import {Sticker} from '../../lib/Sticker';
 
 const WORDS = 'Bulan lalu, uangmu habis ke mana?'.split(' ');
 const FROM = 4_250_000;

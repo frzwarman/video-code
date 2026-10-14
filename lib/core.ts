@@ -42,21 +42,21 @@ export const kick = (f: number, at: number, amp = 10, decay = 8) =>
 /** Round to whole thousands, so a counting rupiah figure never shows odd digits. */
 export const roundK = (n: number) => Math.round(n / 1000) * 1000;
 
-import manifest from '../public/vo/manifest.json';
+/** The voiceover: one clip per scene, written by `npm run tts -- <video>` from <video>/voice.json. */
+export type Voice = {file: string; lead: number; tail: number; seconds: number; segments: {text: string; start: number; end: number}[]};
 
-/** The voiceover, one clip per scene, written by `npm run tts` from arus/voice.json. */
-type Voice = {file: string; lead: number; tail: number; seconds: number; segments: {text: string; start: number; end: number}[]};
-export const VOICE = manifest as Record<string, Voice>;
-
-/** Frame (inside scene `id`) where voice segment `seg` starts, moved `frac` of the way through it (1 = its end). */
-export const cue = (id: string, seg: number, frac = 0) => {
-  const v = VOICE[id];
-  const s = v.segments[Math.min(seg, v.segments.length - 1)];
-  return Math.round((v.lead + s.start + frac * (s.end - s.start)) * FPS);
-};
-
-/** Frame where scene `id`'s voice ends. */
-export const voiceEnd = (id: string) => Math.round((VOICE[id].lead + VOICE[id].seconds) * FPS);
+/** The timing helpers for one video's manifest: `cue(id, segment, fraction)` and `voiceEnd(id)`, in scene frames. */
+export const makeCues = (manifest: Record<string, Voice>) => ({
+  VOICE: manifest,
+  /** Frame (inside scene `id`) where voice segment `seg` starts, moved `frac` of the way through it (1 = its end). */
+  cue: (id: string, seg: number, frac = 0) => {
+    const v = manifest[id];
+    const s = v.segments[Math.min(seg, v.segments.length - 1)];
+    return Math.round((v.lead + s.start + frac * (s.end - s.start)) * FPS);
+  },
+  /** Frame where scene `id`'s voice ends. */
+  voiceEnd: (id: string) => Math.round((manifest[id].lead + manifest[id].seconds) * FPS),
+});
 
 /** A camera move: from frame `at`, over `dur` frames, settle at `zoom` looking at (x, y) in scene pixels. */
 export type CameraKey = {at: number; zoom: number; x?: number; y?: number; dur?: number};

@@ -1,10 +1,11 @@
 // S13 · 58.07–63.4s — No third-party trackers. Only people you invite can see your data.
 import type {ComponentType} from 'react';
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, back, cue, kick, prog, spin} from '../core';
-import {EyeOff, Users} from '../icons';
-import {Marker, YELLOW_MARK} from '../Fx';
-import {C, body, display, panel, pop} from '../palette';
+import {type CameraKey, type Cue, back, kick, prog, spin} from '../../lib/core';
+import {cue} from '../voice';
+import {EyeOff, Users} from '../../lib/icons';
+import {Marker, YELLOW_MARK} from '../../lib/Fx';
+import {C, body, display, panel, pop} from '../../lib/palette';
 
 const ITEMS: {text: string; Icon: ComponentType<{size: number; color: string; slash?: number}>; at: number; top: number}[] = [
   {text: 'Tanpa pelacak pihak ketiga', Icon: EyeOff, at: 0, top: 540},

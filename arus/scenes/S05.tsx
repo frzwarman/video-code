@@ -1,13 +1,14 @@
 // S5 — Any payment screen will do: a bank transfer, a QRIS payment, an e-wallet payment. Then one of them,
 // a QRIS receipt on the phone, is read: amount, merchant, date; it is filed under the category you picked.
 import {AbsoluteFill, interpolateColors, random, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, back, cue, fadeUp, lerp, prog, swift} from '../core';
-import {Ring, ScanBeam} from '../Fx';
-import {Bank, Receipt, Wallet} from '../icons';
-import {Tile} from '../lucide';
-import {C, body, display, panel} from '../palette';
-import {Phone, bezel} from '../Phone';
-import {Sticker} from '../Sticker';
+import {type CameraKey, type Cue, back, fadeUp, lerp, prog, swift} from '../../lib/core';
+import {cue} from '../voice';
+import {Ring, ScanBeam} from '../../lib/Fx';
+import {Bank, Receipt, Wallet} from '../../lib/icons';
+import {Tile} from '../../lib/lucide';
+import {C, body, display, panel} from '../../lib/palette';
+import {Phone, bezel} from '../../lib/Phone';
+import {Sticker} from '../../lib/Sticker';
 
 // VO: "Transfer bank, QRIS, atau e-wallet:" | "apa pun layarnya, Arus membaca" | "nominal," | "penerima," | "dan tanggalnya."
 //     | "Lalu memasukkannya ke kategori yang kamu PILIH." | "Lain kali, Arus ingat SENDIRI."

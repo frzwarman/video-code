@@ -1,10 +1,11 @@
 // S8 · 37.63–41.73s — Shared with the household: three people, three phones, one number.
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, back, cue, fadeUp, lerp, prog, spin, swift} from '../core';
-import {APP_W, Home} from '../Home';
-import {Phone, bezel} from '../Phone';
-import {Marker, Ring} from '../Fx';
-import {C, body, display, panel, pop} from '../palette';
+import {type CameraKey, type Cue, back, fadeUp, lerp, prog, spin, swift} from '../../lib/core';
+import {cue} from '../voice';
+import {APP_W, Home} from '../../lib/Home';
+import {Phone, bezel} from '../../lib/Phone';
+import {Marker, Ring} from '../../lib/Fx';
+import {C, body, display, panel, pop} from '../../lib/palette';
 
 const COUNT = {from: cue('S8', 1), to: cue('S8', 1, 0.8)}; // VO: "Semua melihat angka yang sama."
 const LINK_AT = cue('S8', 1, 0.6);

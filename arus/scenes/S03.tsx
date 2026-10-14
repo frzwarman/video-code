@@ -1,12 +1,13 @@
 // S3 — Hook C: transfer receipt, double-tap the back, pick the category from the list the Shortcut shows,
 // notification, logged. (Known payees skip the list: Arus files them itself.)
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, back, cue, kick, prog, spin} from '../core';
-import {Marker, Ring, ScanBeam, YELLOW_MARK} from '../Fx';
-import {Coffee} from '../icons';
-import {Phone, bezel} from '../Phone';
-import {C, OS, body, display} from '../palette';
-import {Sticker} from '../Sticker';
+import {type CameraKey, type Cue, back, kick, prog, spin} from '../../lib/core';
+import {cue} from '../voice';
+import {Marker, Ring, ScanBeam, YELLOW_MARK} from '../../lib/Fx';
+import {Coffee} from '../../lib/icons';
+import {Phone, bezel} from '../../lib/Phone';
+import {C, OS, body, display} from '../../lib/palette';
+import {Sticker} from '../../lib/Sticker';
 
 // VO: "Habis transfer? Ketuk DUA kali bagian belakang iPhone-mu." | "Pilih kategorinya," | "dan LANGSUNG tercatat."
 const END1 = cue('S3', 0, 1);

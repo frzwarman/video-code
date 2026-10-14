@@ -274,7 +274,7 @@ export const Home = ({f, lit = {}, countFrom = 0}: {f: number; lit?: {in?: numbe
 };
 
 /** The phone's tab bar: four destinations around a raised Add button (AppShell.tsx). Fixed to the viewport. */
-export const TabBar = ({active = 'Home'}: {active?: string}) => (
+export const TabBar = ({active = 'Home', avatar}: {active?: string; avatar?: ReactNode}) => (
   <div style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 86, borderRadius: '28px 28px 0 0', background: C.raised, borderTop: `1px solid ${C.line}`, boxShadow: '0 -2px 6px oklch(0.3 0.06 168 / 0.08), 0 -28px 56px -24px oklch(0.3 0.06 168 / 0.38)', fontFamily: body}}>
     <div style={{display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', alignItems: 'end', padding: '4px 8px 0'}}>
       {([
@@ -297,7 +297,9 @@ export const TabBar = ({active = 'Home'}: {active?: string}) => (
               {tab[1] ? (
                 <Lucide name={tab[1]} size={22} color={tab[0] === active ? C.accentInk : C.inkSoft} />
               ) : (
-                <span style={{width: 24, height: 24, borderRadius: '50%', background: pop('sun').soft, color: pop('sun').strong, display: 'grid', placeItems: 'center', fontSize: 9, fontWeight: 800}}>J</span>
+                <span style={{position: 'relative', width: 24, height: 24, borderRadius: '50%', overflow: 'hidden', background: pop('sun').soft, color: pop('sun').strong, display: 'grid', placeItems: 'center', fontSize: 9, fontWeight: 800}}>
+                  J{avatar}
+                </span>
               )}
             </span>
             {tab[0]}

@@ -1,12 +1,13 @@
 // S14 — Add to Home Screen. iPhone: Safari → Share → "Tambah ke Layar Utama" → the Arus icon lands on the
 // home screen. Then Android: Chrome → ⋮ → "Tambahkan ke Layar utama" → same home screen.
 import {AbsoluteFill, random, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, back, cue, fadeUp, kick, prog, spin, voiceEnd} from '../core';
-import {Marker, Ring} from '../Fx';
-import {Logo} from '../Logo';
-import {Phone, bezel} from '../Phone';
-import {APP_W, Home} from '../Home';
-import {C, body, display} from '../palette';
+import {type CameraKey, type Cue, back, fadeUp, kick, prog, spin} from '../../lib/core';
+import {cue, voiceEnd} from '../voice';
+import {Marker, Ring} from '../../lib/Fx';
+import {Logo} from '../../lib/Logo';
+import {Phone, bezel} from '../../lib/Phone';
+import {APP_W, Home} from '../../lib/Home';
+import {C, body, display} from '../../lib/palette';
 
 // Voice segments: 0 "…tidak perlu diunduh dari App Store." · 1 "Buka Arus di Safari," · 2 "ketuk tombol Bagikan,"
 // 3 "lalu pilih Tambah ke Layar Utama." · 4 "Sekarang Arus ada di layar utamamu, seperti aplikasi biasa."

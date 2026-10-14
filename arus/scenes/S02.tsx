@@ -1,8 +1,9 @@
 // S2 · 3.22–9.27s — Hook B: the bank shows what's left, Arus shows where it went.
 import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, cue, prog, roundK, rupiah} from '../core';
-import {FlowDots, Marker} from '../Fx';
-import {C, body, display, panel} from '../palette';
+import {type CameraKey, type Cue, prog, roundK, rupiah} from '../../lib/core';
+import {cue} from '../voice';
+import {FlowDots, Marker} from '../../lib/Fx';
+import {C, body, display, panel} from '../../lib/palette';
 
 const ARUS_AT = cue('S2', 1); // VO: "Arus kasih tahu ke mana perginya."
 const LINES_AT = ARUS_AT + 30;

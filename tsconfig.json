@@ -11,6 +11,8 @@
   },
   "include": [
     "src",
-    "arus"
+    "lib",
+    "arus",
+    "arus-fitur"
   ]
 }

@@ -1,0 +1,18 @@
+{
+  "engine": {
+    "model": "gemini-3.8-flash-tts",
+    "voice": "Kore",
+    "style": "Warm, confident, clear narrator for an app walkthrough in Indonesian. Friendly and unhurried; crisp pronunciation; medium pace.",
+    "rpm": 3
+  },
+  "defaults": {"lead": 0.2, "tail": 0.35, "pause": 0.3},
+  "scenes": [
+    {"id": "S1", "segments": [{"text": "SATU aplikasi.", "pause": 0.4}, "Lima hal yang biasanya butuh LIMA aplikasi berbeda."], "tail": 0.6},
+    {"id": "S2", "segments": ["Mulai dari rekeningmu.", {"text": "Tambah akun:", "pause": 0.25}, {"text": "tunai,", "pause": 0.2}, {"text": "bank,", "pause": 0.2}, "atau e-wallet,", "isi saldo awalnya, selesai.", "Saldonya ikut BERGERAK setiap kali kamu mencatat."], "tail": 0.5},
+    {"id": "S3", "segments": ["Lalu kategori.", {"text": "Beri nama,", "pause": 0.2}, {"text": "pilih untuk pengeluaran atau pemasukan,", "pause": 0.2}, "pilih warnanya.", "Kategori tidak pernah dihapus, hanya DIARSIPKAN,", "jadi catatan lama tetap punya arti."], "tail": 0.5},
+    {"id": "S4", "segments": ["Setiap kategori bisa punya batas bulanan.", {"text": "Isi nominalnya,", "pause": 0.2}, "dan Arus menghitung SISANYA sepanjang bulan.", {"text": "Bulan depan?", "pause": 0.35}, "Tinggal SALIN anggaran bulan lalu."], "tail": 0.5},
+    {"id": "S5", "segments": ["Mau berbagi?", {"text": "Buat workspace bersama,", "pause": 0.2}, {"text": "undang lewat email,", "pause": 0.2}, {"text": "pilih perannya:", "pause": 0.25}, {"text": "pemilik,", "pause": 0.2}, {"text": "editor,", "pause": 0.2}, "atau pembaca.", "Tautannya SEKALI pakai, hanya untuk alamat yang diundang."], "tail": 0.5},
+    {"id": "S6", "segments": ["Terakhir, bikin jadi MILIKMU.", {"text": "Unggah foto profil:", "pause": 0.25}, "Arus memotongnya jadi persegi dan menyimpannya kecil.", "Langsung tampil di profilmu."], "tail": 0.6},
+    {"id": "S7", "segments": [{"text": "Arus.", "pause": 0.4}, "Lihat ke mana uangmu MENGALIR."], "lead": 0.6, "tail": 1.5}
+  ]
+}

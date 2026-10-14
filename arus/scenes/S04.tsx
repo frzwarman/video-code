@@ -1,11 +1,12 @@
 // S4 — "Ini Arus." Logo, the claim, then the three account cards land: the Accounts page look (cash sun,
 // bank ocean, e-wallet grape: a soft tone card with two blobs, an icon tile and a big balance).
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, back, cue, fadeUp, lerp, prog, roundK, rupiah, voiceEnd} from '../core';
-import {Marker} from '../Fx';
-import {Logo} from '../Logo';
-import {ACCOUNT, Lucide} from '../lucide';
-import {C, body, display, pop} from '../palette';
+import {type CameraKey, type Cue, back, fadeUp, lerp, prog, roundK, rupiah} from '../../lib/core';
+import {cue, voiceEnd} from '../voice';
+import {Marker} from '../../lib/Fx';
+import {Logo} from '../../lib/Logo';
+import {ACCOUNT, Lucide} from '../../lib/lucide';
+import {C, body, display, pop} from '../../lib/palette';
 
 const LIFT_AT = cue('S4', 1) - 10; // logo moves up to make room
 const HEAD_AT = cue('S4', 1) + 14; // "Semua rekeningmu di SATU tempat", once the logo is out of the way

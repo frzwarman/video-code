@@ -1,10 +1,11 @@
 // The whole film: scene timeline from TREATMENT.md. Every frame is a function of the frame number.
 import type {ComponentType, ReactNode} from 'react';
 import {AbsoluteFill, Audio, Sequence, interpolate, staticFile, useCurrentFrame} from 'remotion';
-import {Backdrop} from './Backdrop';
-import {type CameraKey, type Cue, VOICE, cameraAt, lerp, prog, sec} from './core';
-import {WAVE} from './Logo';
-import {C} from './palette';
+import {Backdrop} from '../lib/Backdrop';
+import {type CameraKey, type Cue, cameraAt, lerp, prog, sec} from '../lib/core';
+import {VOICE} from './voice';
+import {WAVE} from '../lib/Logo';
+import {C} from '../lib/palette';
 import * as S01 from './scenes/S01';
 import * as S02 from './scenes/S02';
 import * as S03 from './scenes/S03';

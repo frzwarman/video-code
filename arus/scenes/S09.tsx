@@ -1,9 +1,10 @@
 // S9 · 41.73–43.45s — "Soal keamanan:" title card.
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, cue, fadeUp, prog} from '../core';
-import {Lock} from '../icons';
-import {Marker, Ring} from '../Fx';
-import {C, display} from '../palette';
+import {type CameraKey, type Cue, fadeUp, prog} from '../../lib/core';
+import {cue} from '../voice';
+import {Lock} from '../../lib/icons';
+import {Marker, Ring} from '../../lib/Fx';
+import {C, display} from '../../lib/palette';
 
 const SHUT_AT = cue('S9', 0, 0.9);
 export const camera: CameraKey[] = [{at: SHUT_AT - 20, zoom: 1.1, x: 540, y: 900, dur: 30}];

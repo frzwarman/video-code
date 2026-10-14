@@ -1,6 +1,6 @@
 {
   "S1": {
-    "file": "vo/S1.wav",
+    "file": "vo/arus/S1.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 1,
@@ -14,7 +14,7 @@
     ]
   },
   "S2": {
-    "file": "vo/S2.wav",
+    "file": "vo/arus/S2.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 0.35,
@@ -33,7 +33,7 @@
     ]
   },
   "S3": {
-    "file": "vo/S3.wav",
+    "file": "vo/arus/S3.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 0.35,
@@ -57,7 +57,7 @@
     ]
   },
   "S4": {
-    "file": "vo/S4.wav",
+    "file": "vo/arus/S4.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 0.8,
@@ -91,7 +91,7 @@
     ]
   },
   "S5": {
-    "file": "vo/S5.wav",
+    "file": "vo/arus/S5.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 0.6,
@@ -135,7 +135,7 @@
     ]
   },
   "S6": {
-    "file": "vo/S6.wav",
+    "file": "vo/arus/S6.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 0.35,
@@ -149,7 +149,7 @@
     ]
   },
   "S7": {
-    "file": "vo/S7.wav",
+    "file": "vo/arus/S7.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 0.35,
@@ -178,7 +178,7 @@
     ]
   },
   "S8": {
-    "file": "vo/S8.wav",
+    "file": "vo/arus/S8.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 0.6,
@@ -197,7 +197,7 @@
     ]
   },
   "S9": {
-    "file": "vo/S9.wav",
+    "file": "vo/arus/S9.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 0.35,
@@ -211,7 +211,7 @@
     ]
   },
   "S10": {
-    "file": "vo/S10.wav",
+    "file": "vo/arus/S10.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 0.35,
@@ -240,7 +240,7 @@
     ]
   },
   "S11": {
-    "file": "vo/S11.wav",
+    "file": "vo/arus/S11.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 0.35,
@@ -259,7 +259,7 @@
     ]
   },
   "S12": {
-    "file": "vo/S12.wav",
+    "file": "vo/arus/S12.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 0.9,
@@ -278,7 +278,7 @@
     ]
   },
   "S13": {
-    "file": "vo/S13.wav",
+    "file": "vo/arus/S13.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 0.35,
@@ -297,7 +297,7 @@
     ]
   },
   "S14": {
-    "file": "vo/S14.wav",
+    "file": "vo/arus/S14.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.2,
     "tail": 1.3,
@@ -336,7 +336,7 @@
     ]
   },
   "S15": {
-    "file": "vo/S15.wav",
+    "file": "vo/arus/S15.wav",
     "engine": "gemini-3.8-flash-tts",
     "lead": 0.6,
     "tail": 1.5,

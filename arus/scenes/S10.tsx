@@ -1,9 +1,10 @@
 // S10 · 43.45–49.18s — Arus never connects to your bank. No bank login, no PIN, no password.
 import {AbsoluteFill, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, cue, fadeUp, kick, lerp, prog, spin} from '../core';
-import {Bank} from '../icons';
-import {Logo} from '../Logo';
-import {C, body, panel} from '../palette';
+import {type CameraKey, type Cue, fadeUp, kick, lerp, prog, spin} from '../../lib/core';
+import {cue} from '../voice';
+import {Bank} from '../../lib/icons';
+import {Logo} from '../../lib/Logo';
+import {C, body, panel} from '../../lib/palette';
 
 const CUT_AT = cue('S10', 0, 0.5);
 // VO: "Tidak ada login bank, tidak ada PIN, tidak ada password."

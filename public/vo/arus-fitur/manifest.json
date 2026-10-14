@@ -1,0 +1,235 @@
+{
+  "S1": {
+    "file": "vo/arus-fitur/S1.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.6,
+    "seconds": 5.58,
+    "segments": [
+      {
+        "text": "SATU aplikasi.",
+        "start": 0,
+        "end": 1.436
+      },
+      {
+        "text": "Lima hal yang biasanya butuh LIMA aplikasi berbeda.",
+        "start": 1.836,
+        "end": 5.58
+      }
+    ]
+  },
+  "S2": {
+    "file": "vo/arus-fitur/S2.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.5,
+    "seconds": 13.332,
+    "segments": [
+      {
+        "text": "Mulai dari rekeningmu.",
+        "start": 0,
+        "end": 1.479
+      },
+      {
+        "text": "Tambah akun:",
+        "start": 1.779,
+        "end": 2.917
+      },
+      {
+        "text": "tunai,",
+        "start": 3.167,
+        "end": 3.811
+      },
+      {
+        "text": "bank,",
+        "start": 4.011,
+        "end": 4.541
+      },
+      {
+        "text": "atau e-wallet,",
+        "start": 4.741,
+        "end": 5.831
+      },
+      {
+        "text": "isi saldo awalnya, selesai.",
+        "start": 6.131,
+        "end": 7.703
+      },
+      {
+        "text": "Saldonya ikut BERGERAK setiap kali kamu mencatat.",
+        "start": 8.003,
+        "end": 13.332
+      }
+    ]
+  },
+  "S3": {
+    "file": "vo/arus-fitur/S3.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.5,
+    "seconds": 13.78,
+    "segments": [
+      {
+        "text": "Lalu kategori.",
+        "start": 0,
+        "end": 1.186
+      },
+      {
+        "text": "Beri nama,",
+        "start": 1.486,
+        "end": 2.384
+      },
+      {
+        "text": "pilih untuk pengeluaran atau pemasukan,",
+        "start": 2.584,
+        "end": 5.362
+      },
+      {
+        "text": "pilih warnanya.",
+        "start": 5.562,
+        "end": 6.696
+      },
+      {
+        "text": "Kategori tidak pernah dihapus, hanya DIARSIPKAN,",
+        "start": 6.996,
+        "end": 10.769
+      },
+      {
+        "text": "jadi catatan lama tetap punya arti.",
+        "start": 11.069,
+        "end": 13.78
+      }
+    ]
+  },
+  "S4": {
+    "file": "vo/arus-fitur/S4.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.5,
+    "seconds": 11.989,
+    "segments": [
+      {
+        "text": "Setiap kategori bisa punya batas bulanan.",
+        "start": 0,
+        "end": 3.169
+      },
+      {
+        "text": "Isi nominalnya,",
+        "start": 3.469,
+        "end": 4.822
+      },
+      {
+        "text": "dan Arus menghitung SISANYA sepanjang bulan.",
+        "start": 5.022,
+        "end": 8.155
+      },
+      {
+        "text": "Bulan depan?",
+        "start": 8.455,
+        "end": 9.458
+      },
+      {
+        "text": "Tinggal SALIN anggaran bulan lalu.",
+        "start": 9.808,
+        "end": 11.989
+      }
+    ]
+  },
+  "S5": {
+    "file": "vo/arus-fitur/S5.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.5,
+    "seconds": 13.867,
+    "segments": [
+      {
+        "text": "Mau berbagi?",
+        "start": 0,
+        "end": 0.997
+      },
+      {
+        "text": "Buat workspace bersama,",
+        "start": 1.297,
+        "end": 3.249
+      },
+      {
+        "text": "undang lewat email,",
+        "start": 3.449,
+        "end": 4.947
+      },
+      {
+        "text": "pilih perannya:",
+        "start": 5.147,
+        "end": 6.218
+      },
+      {
+        "text": "pemilik,",
+        "start": 6.468,
+        "end": 7.088
+      },
+      {
+        "text": "editor,",
+        "start": 7.288,
+        "end": 8.036
+      },
+      {
+        "text": "atau pembaca.",
+        "start": 8.236,
+        "end": 9.375
+      },
+      {
+        "text": "Tautannya SEKALI pakai, hanya untuk alamat yang diundang.",
+        "start": 9.675,
+        "end": 13.867
+      }
+    ]
+  },
+  "S6": {
+    "file": "vo/arus-fitur/S6.wav",
+    "engine": "stand-in",
+    "lead": 0.2,
+    "tail": 0.6,
+    "seconds": 10.379,
+    "segments": [
+      {
+        "text": "Terakhir, bikin jadi MILIKMU.",
+        "start": 0,
+        "end": 2.268
+      },
+      {
+        "text": "Unggah foto profil:",
+        "start": 2.568,
+        "end": 4.101
+      },
+      {
+        "text": "Arus memotongnya jadi persegi dan menyimpannya kecil.",
+        "start": 4.351,
+        "end": 8.164
+      },
+      {
+        "text": "Langsung tampil di profilmu.",
+        "start": 8.464,
+        "end": 10.379
+      }
+    ]
+  },
+  "S7": {
+    "file": "vo/arus-fitur/S7.wav",
+    "engine": "stand-in",
+    "lead": 0.6,
+    "tail": 1.5,
+    "seconds": 3.015,
+    "segments": [
+      {
+        "text": "Arus.",
+        "start": 0,
+        "end": 0.574
+      },
+      {
+        "text": "Lihat ke mana uangmu MENGALIR.",
+        "start": 0.974,
+        "end": 3.015
+      }
+    ]
+  }
+}

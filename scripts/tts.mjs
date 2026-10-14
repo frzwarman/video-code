@@ -6,20 +6,24 @@ import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {copyFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync} from 'node:fs';
 
-const SRC = 'arus/voice.json';
-const OUT = 'public/vo';
+// `node scripts/tts.mjs <video> [--standin]`: the video is a folder with a voice.json; --standin skips Gemini.
+const ARGS = process.argv.slice(2);
+const VIDEO = ARGS.find((a) => !a.startsWith('--')) ?? 'arus';
+const STANDIN = ARGS.includes('--standin');
+const SRC = `${VIDEO}/voice.json`;
+const OUT = `public/vo/${VIDEO}`;
 const CACHE = '.cache/tts';
 const TARGET_LUFS = -14;
 const MAX_GROUP_SEGMENTS = 14; // scenes with the same style share one request, up to this many segments (bigger = fewer requests, riskier splits)
 
 const dotenv = existsSync('.env') ? Object.fromEntries(readFileSync('.env', 'utf8').split('\n').filter((l) => l.includes('=')).map((l) => [l.slice(0, l.indexOf('=')).trim(), l.slice(l.indexOf('=') + 1).trim()])) : {};
-const KEY = process.env.GEMINI_API_KEY ?? dotenv.GEMINI_API_KEY;
+const KEY = STANDIN ? undefined : (process.env.GEMINI_API_KEY ?? dotenv.GEMINI_API_KEY);
 
 const {engine, defaults, scenes} = JSON.parse(readFileSync(SRC, 'utf8'));
 const ENGINE = {model: engine.model, voice: engine.voice};
 mkdirSync(OUT, {recursive: true});
 mkdirSync(CACHE, {recursive: true});
-if (!KEY) console.warn('GEMINI_API_KEY not set: every scene gets the macOS stand-in voice.');
+if (!KEY) console.warn(STANDIN ? 'Stand-in voice requested: every scene gets the macOS voice.' : 'GEMINI_API_KEY not set: every scene gets the macOS stand-in voice.');
 
 const run = (cmd, args) => {
   const r = spawnSync(cmd, args, {encoding: 'utf8', maxBuffer: 64e6});
@@ -241,17 +245,17 @@ for (const {scene, segs, text, clips} of plan) {
       t += segs[i].pause;
     }
   });
-  const joined = `${CACHE}/${scene.id}.joined.wav`;
+  const joined = `${CACHE}/${VIDEO}-${scene.id}.joined.wav`;
   ffmpeg([...inputs, '-filter_complex', `${labels.join('')}concat=n=${labels.length}:v=0:a=1[a]`, '-map', '[a]', joined]);
 
   // One constant gain to −14 LUFS, then a true-peak ceiling.
   const log = run('ffmpeg', ['-hide_banner', '-i', joined, '-af', 'loudnorm=print_format=json', '-f', 'null', '-']).stderr;
   const measured = JSON.parse(log.slice(log.lastIndexOf('{'), log.lastIndexOf('}') + 1));
   const gain = (TARGET_LUFS - +measured.input_i).toFixed(2);
-  ffmpeg(['-i', joined, '-af', `volume=${gain}dB,alimiter=limit=0.841:attack=2:release=60:level=false`, `${CACHE}/${scene.id}.out.wav`]);
+  ffmpeg(['-i', joined, '-af', `volume=${gain}dB,alimiter=limit=0.841:attack=2:release=60:level=false`, `${CACHE}/${VIDEO}-${scene.id}.out.wav`]);
 
   manifest[scene.id] = {
-    file: `vo/${scene.id}.wav`,
+    file: `vo/${VIDEO}/${scene.id}.wav`,
     engine: standIns.includes(scene.id) ? 'stand-in' : engine.model,
     lead: scene.lead ?? defaults.lead,
     tail: scene.tail ?? defaults.tail,
@@ -265,11 +269,11 @@ for (const [id, m] of Object.entries(manifest)) {
   if (!(m.seconds > 0) || m.segments.some((s) => !(s.end > s.start))) throw new Error(`${id}: a clip is empty or unreadable; nothing was published.`);
 }
 // Publish clips and manifest together, so the preview never plays a half-updated set.
-for (const {scene} of plan) copyFileSync(`${CACHE}/${scene.id}.out.wav`, `${OUT}/${scene.id}.wav`);
+for (const {scene} of plan) copyFileSync(`${CACHE}/${VIDEO}-${scene.id}.out.wav`, `${OUT}/${scene.id}.wav`);
 writeFileSync(`${OUT}/manifest.json`, JSON.stringify(manifest, null, 2) + '\n');
 const total = Object.values(manifest).reduce((a, m) => a + m.lead + m.seconds + m.tail, 0);
-console.log(`→ ${OUT}/manifest.json · ${plan.length} scenes · ${total.toFixed(1)}s of film`);
+console.log(`→ ${OUT}/manifest.json · ${VIDEO} · ${plan.length} scenes · ${total.toFixed(1)}s of film`);
 if (standIns.length) {
   const reset = blockedUntil ? ` — Gemini's daily quota resets around ${new Date(blockedUntil).toLocaleString()}` : '';
-  console.warn(`Stand-in voice on ${standIns.join(', ')}${reset}. Run \`npm run tts\` again to fill them in.`);
+  console.warn(`Stand-in voice on ${standIns.join(', ')}${reset}. Run \`npm run tts -- ${VIDEO}\` again to fill them in.`);
 }

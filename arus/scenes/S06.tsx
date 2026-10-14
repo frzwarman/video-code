@@ -1,10 +1,11 @@
 // S6 · 27.78–32.08s — Budgets fill as October runs from day 1 to 31.
 import {AbsoluteFill, interpolate, interpolateColors, random, useCurrentFrame} from 'remotion';
-import {type CameraKey, type Cue, cue, fadeUp, kick, prog, rupiah} from '../core';
-import {Calendar} from '../icons';
-import {CATEGORY, Tile} from '../lucide';
-import {C, body, display, panel} from '../palette';
-import {Sticker} from '../Sticker';
+import {type CameraKey, type Cue, fadeUp, kick, prog, rupiah} from '../../lib/core';
+import {cue} from '../voice';
+import {Calendar} from '../../lib/icons';
+import {CATEGORY, Tile} from '../../lib/lucide';
+import {C, body, display, panel} from '../../lib/palette';
+import {Sticker} from '../../lib/Sticker';
 
 const RUN = {from: cue('S6', 0, 0.1), to: cue('S6', 0, 1)}; // frames over which day 1 → 31 plays
 const DAYS = 31;

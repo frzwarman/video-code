@@ -8,8 +8,8 @@
     "tts": "node scripts/tts.mjs",
     "voice:clone": "node scripts/voice-clone.mjs",
     "vo": "node scripts/vo.mjs",
-    "still": "remotion still src/index.ts arus",
-    "render": "remotion render src/index.ts arus out/arus.mp4"
+    "still": "remotion still src/index.ts",
+    "render": "sh -c 'npx remotion render src/index.ts \"$0\" \"out/$0.mp4\"'"
   },
   "dependencies": {
     "@remotion/cli": "^4.0.535",
